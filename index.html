@@ -3,40 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proposal Generator — Rajat Dev</title>
+  <title>Proposal Studio — Rajat Dev</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/proposal.css">
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
-      <h1>Proposal <span>Gen</span></h1>
-      <p class="tagline">Paste job post → instant tailored PDF proposal</p>
+      <header class="brand">
+        <p class="brand-eyebrow">Rajat Dev</p>
+        <h1>Proposal Studio</h1>
+        <p class="tagline">Tailored solutions from any job post</p>
+      </header>
 
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="modeTemplate" type="button">⚡ Template</button>
-        <button class="mode-btn" id="modeAI" type="button">🤖 AI</button>
+      <div class="mode-toggle" role="tablist">
+        <button class="mode-btn active" id="modeTemplate" type="button" role="tab">Smart Draft</button>
+        <button class="mode-btn" id="modeAI" type="button" role="tab">AI Enhanced</button>
       </div>
 
       <div class="field">
-        <label for="jobPost">Job Post</label>
-        <textarea id="jobPost" class="tall" placeholder="Paste the full Upwork / freelance job description here…
+        <label for="jobPost">Job description</label>
+        <textarea id="jobPost" class="tall" placeholder="Paste the full job post here.
 
-Include requirements, tech stack, deliverables, timeline — the more detail, the better the proposal."></textarea>
+Include scope, requirements, tech stack, timeline, and deliverables — the more detail, the sharper the proposal."></textarea>
       </div>
 
       <div class="actions">
         <button class="btn btn-primary" id="btnGenerate" type="button">Generate Proposal</button>
-        <button class="btn btn-secondary" id="btnDownload" type="button" disabled>Download PDF</button>
+        <button class="btn btn-secondary" id="btnDownload" type="button" disabled>Export PDF</button>
       </div>
 
       <details class="collapsible">
-        <summary>⚙️ Profile &amp; Links</summary>
+        <summary>Profile</summary>
         <div class="collapsible-body">
           <div class="field">
-            <label for="profileName">Your Name</label>
+            <label for="profileName">Name</label>
             <input id="profileName" type="text" value="Rajat">
           </div>
           <div class="field">
@@ -48,44 +51,44 @@ Include requirements, tech stack, deliverables, timeline — the more detail, th
             <input id="profileTitle" type="text" value="Independent Developer &amp; Consultant">
           </div>
           <div class="field">
-            <label for="profileUpwork">Upwork URL</label>
+            <label for="profileUpwork">Upwork</label>
             <input id="profileUpwork" type="text" value="upwork.com/freelancers/~01f65823609a7aac5f">
           </div>
           <div class="field">
-            <label for="profileGithub">GitHub URL</label>
+            <label for="profileGithub">GitHub</label>
             <input id="profileGithub" type="text" value="github.com/Fullstackdeveloper4545">
           </div>
-          <button class="btn btn-ghost" id="btnSaveSettings" type="button">Save Profile</button>
+          <button class="btn btn-ghost" id="btnSaveSettings" type="button">Save profile</button>
         </div>
       </details>
 
       <details class="collapsible">
-        <summary>🤖 AI Settings (optional)</summary>
+        <summary>AI settings</summary>
         <div class="collapsible-body">
           <div class="field">
-            <label for="apiKey">OpenAI API Key</label>
+            <label for="apiKey">OpenAI API key</label>
             <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
-            <small>Stored locally in your browser only. Switch to AI mode to use.</small>
+            <small>Stored locally in your browser only.</small>
           </div>
           <div class="field">
             <label for="model">Model</label>
             <select id="model">
-              <option value="gpt-4o-mini">gpt-4o-mini (fast, cheap)</option>
-              <option value="gpt-4o">gpt-4o (best quality)</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="gpt-4o">gpt-4o</option>
               <option value="gpt-4.1-mini">gpt-4.1-mini</option>
               <option value="gpt-4.1">gpt-4.1</option>
             </select>
           </div>
           <div class="field">
-            <label for="promptSystem">System Prompt</label>
+            <label for="promptSystem">System prompt</label>
             <textarea id="promptSystem" rows="5"></textarea>
           </div>
           <div class="field">
-            <label for="promptUser">User Prompt Template</label>
+            <label for="promptUser">User prompt</label>
             <textarea id="promptUser" rows="8"></textarea>
-            <small>Use {{JOB_POST}} where the job text gets inserted.</small>
+            <small>Use {{JOB_POST}} as placeholder.</small>
           </div>
-          <button class="btn btn-ghost" id="btnSavePrompts" type="button">Save All Settings</button>
+          <button class="btn btn-ghost" id="btnSavePrompts" type="button">Save settings</button>
         </div>
       </details>
     </aside>
@@ -95,14 +98,15 @@ Include requirements, tech stack, deliverables, timeline — the more detail, th
         <h2>Preview</h2>
         <div class="status" id="status">
           <span class="dot"></span>
-          <span id="statusText">Template mode — instant, no API needed</span>
+          <span id="statusText">Smart Draft — instant, no API needed</span>
         </div>
       </div>
 
       <div class="preview-wrap">
         <div class="preview-empty" id="previewEmpty">
-          <h3>No proposal yet</h3>
-          <p>Paste a job post on the left and hit <strong>Generate Proposal</strong>. You'll get a 5-page PDF matching your blue/green brand — requirements addressed, strategy proposed, no email.</p>
+          <p class="empty-label">Ready when you are</p>
+          <h3>Your proposal appears here</h3>
+          <p>Paste a job post, generate, and export a polished PDF — requirements addressed, solution proposed, strategy mapped.</p>
         </div>
         <div class="preview-frame hidden" id="previewFrame"></div>
       </div>

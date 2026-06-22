@@ -49,6 +49,7 @@ function normalizeProposal(data, profile) {
     coverSubtitle: data.coverSubtitle || '',
     tags: Array.isArray(data.tags) ? data.tags.slice(0, 8) : [],
     understandingLead: data.understandingLead || '',
+    solution: data.solution || null,
     requirements: Array.isArray(data.requirements) ? data.requirements.slice(0, 8) : [],
     strategyOverview: data.strategyOverview || '',
     phases: Array.isArray(data.phases) ? data.phases.slice(0, 5) : [],

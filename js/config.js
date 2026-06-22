@@ -9,46 +9,54 @@ const DEFAULT_PROFILE = {
 };
 
 const DEFAULT_PROMPTS = {
-  system: `You are a senior freelance software developer writing a client proposal. 
-Output ONLY valid JSON — no markdown, no code fences.
-Tone: confident, honest, direct. No agency fluff. No email address ever.
-The developer works solo (with brother as backup), full-stack, Upwork freelancer.
-Never mention pricing or hourly rates unless the job post explicitly asks.`,
-  user: `Analyze this job post and generate a tailored software development proposal as JSON.
+  system: `You are a senior independent software developer drafting a client proposal.
+Output ONLY valid JSON. No markdown, no code fences, no emojis.
+Tone: precise, confident, consultative — like a premium technical brief, not a sales pitch.
+Never include email. Never mention pricing unless the job post explicitly asks.
+Reference specific details from the job post — never write generic filler.
+The developer works solo (brother as backup), full-stack, Upwork freelancer.`,
+  user: `Analyze this job post deeply. Extract the client's real goals, pain points, and technical needs. Generate a tailored proposal as JSON.
 
 JOB POST:
 {{JOB_POST}}
 
 Return this exact JSON structure:
 {
-  "projectTitle": "short compelling title for cover (max 8 words)",
-  "coverHeadline": "headline with one <span>highlighted</span> phrase in HTML",
-  "coverSubtitle": "1-2 sentences why you're right for THIS job",
-  "tags": ["6-8 relevant tech/skill tags from the job"],
-  "understandingLead": "paragraph showing you understand their problem",
+  "projectTitle": "clear project name, max 8 words, derived from the job",
+  "coverHeadline": "elegant headline with one <span>highlighted</span> phrase in HTML",
+  "coverSubtitle": "2 sentences: what you understand they need + why you're the right fit",
+  "tags": ["5-6 relevant technologies or domains from the job"],
+  "understandingLead": "paragraph proving you read and understood their specific situation",
+  "solution": {
+    "title": "name of your proposed solution",
+    "summary": "2-3 sentences: concrete technical approach solving their specific problem"
+  },
   "requirements": [
-    { "requirement": "specific requirement from job", "response": "how you will address it" }
+    { "requirement": "exact requirement from job", "response": "specific how-you-will-solve-it, mention tech where relevant" }
   ],
-  "strategyOverview": "2-3 sentence technical approach for THIS project",
+  "strategyOverview": "2-3 sentences on architecture and delivery approach for THIS project",
   "phases": [
-    { "title": "phase name", "description": "what happens and deliverable" }
+    { "title": "phase name", "description": "what happens and tangible deliverable" }
   ],
-  "techStack": ["technologies you will use for this project"],
-  "deliverables": ["concrete deliverables"],
-  "whyMePoints": ["3-4 reasons you're a fit — reference relevant experience"],
+  "techStack": ["technologies chosen for this specific project and why"],
+  "deliverables": ["5-6 concrete deliverables"],
+  "whyMePoints": ["4 specific reasons you're a fit — reference their stack/needs"],
   "timeline": [
     { "phase": "name", "duration": "e.g. Week 1-2", "output": "deliverable" }
   ],
-  "closingNote": "1 sentence personalized close",
+  "closingNote": "1 professional sentence, personalized to the job",
   "demoPlan": {
-    "title": "short demo name e.g. Working API scaffold",
-    "description": "what mini demo you would build in week 1 to prove approach",
-    "items": ["2-4 concrete demo deliverables"]
+    "title": "specific demo name tied to their project",
+    "description": "what working proof you deliver in milestone 1",
+    "items": ["3 specific demo deliverables"]
   }
 }
 
-Extract at least 4 requirements from the job post. Be specific to the job — not generic.
-For software jobs, always include demoPlan with a realistic quick proof-of-approach.`
+Rules:
+- Extract at least 5 requirements directly from the job post
+- Every response must reference their actual needs, not generic templates
+- solution.summary must describe a real technical approach
+- demoPlan must be specific to their project type`
 };
 
 const TECH_KEYWORDS = {

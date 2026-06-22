@@ -61,8 +61,8 @@ function updateModeUI() {
   els.modeTemplate.classList.toggle('active', settings.mode === 'template');
   els.modeAI.classList.toggle('active', settings.mode === 'ai');
   els.statusText.textContent = settings.mode === 'ai'
-    ? (settings.apiKey ? 'AI mode — API key set' : 'AI mode — add API key in settings')
-    : 'Template mode — instant, no API needed';
+    ? (settings.apiKey ? 'AI Enhanced — key configured' : 'AI Enhanced — add API key in settings')
+    : 'Smart Draft — instant, no API needed';
 }
 
 function readSettingsFromForm() {
