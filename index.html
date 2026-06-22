@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Generator — Rajat Dev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/proposal.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>Proposal <span>Gen</span></h1>
+      <p class="tagline">Paste job post → instant tailored PDF proposal</p>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeTemplate" type="button">⚡ Template</button>
+        <button class="mode-btn" id="modeAI" type="button">🤖 AI</button>
+      </div>
+
+      <div class="field">
+        <label for="jobPost">Job Post</label>
+        <textarea id="jobPost" class="tall" placeholder="Paste the full Upwork / freelance job description here…
+
+Include requirements, tech stack, deliverables, timeline — the more detail, the better the proposal."></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnGenerate" type="button">Generate Proposal</button>
+        <button class="btn btn-secondary" id="btnDownload" type="button" disabled>Download PDF</button>
+      </div>
+
+      <details class="collapsible">
+        <summary>⚙️ Profile &amp; Links</summary>
+        <div class="collapsible-body">
+          <div class="field">
+            <label for="profileName">Your Name</label>
+            <input id="profileName" type="text" value="Rajat">
+          </div>
+          <div class="field">
+            <label for="profileBrand">Brand</label>
+            <input id="profileBrand" type="text" value="Rajat Dev">
+          </div>
+          <div class="field">
+            <label for="profileTitle">Title</label>
+            <input id="profileTitle" type="text" value="Independent Developer &amp; Consultant">
+          </div>
+          <div class="field">
+            <label for="profileUpwork">Upwork URL</label>
+            <input id="profileUpwork" type="text" value="upwork.com/freelancers/~01f65823609a7aac5f">
+          </div>
+          <div class="field">
+            <label for="profileGithub">GitHub URL</label>
+            <input id="profileGithub" type="text" value="github.com/Fullstackdeveloper4545">
+          </div>
+          <button class="btn btn-ghost" id="btnSaveSettings" type="button">Save Profile</button>
+        </div>
+      </details>
+
+      <details class="collapsible">
+        <summary>🤖 AI Settings (optional)</summary>
+        <div class="collapsible-body">
+          <div class="field">
+            <label for="apiKey">OpenAI API Key</label>
+            <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off">
+            <small>Stored locally in your browser only. Switch to AI mode to use.</small>
+          </div>
+          <div class="field">
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="gpt-4o-mini">gpt-4o-mini (fast, cheap)</option>
+              <option value="gpt-4o">gpt-4o (best quality)</option>
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="promptSystem">System Prompt</label>
+            <textarea id="promptSystem" rows="5"></textarea>
+          </div>
+          <div class="field">
+            <label for="promptUser">User Prompt Template</label>
+            <textarea id="promptUser" rows="8"></textarea>
+            <small>Use {{JOB_POST}} where the job text gets inserted.</small>
+          </div>
+          <button class="btn btn-ghost" id="btnSavePrompts" type="button">Save All Settings</button>
+        </div>
+      </details>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <h2>Preview</h2>
+        <div class="status" id="status">
+          <span class="dot"></span>
+          <span id="statusText">Template mode — instant, no API needed</span>
+        </div>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-empty" id="previewEmpty">
+          <h3>No proposal yet</h3>
+          <p>Paste a job post on the left and hit <strong>Generate Proposal</strong>. You'll get a 5-page PDF matching your blue/green brand — requirements addressed, strategy proposed, no email.</p>
+        </div>
+        <div class="preview-frame hidden" id="previewFrame"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
