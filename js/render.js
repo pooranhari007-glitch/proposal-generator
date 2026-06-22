@@ -3,7 +3,7 @@ function renderProposal(data) {
   const brandParts = (p.brand || 'Rajat Dev').split(' ');
 
   const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
-  const reqs = (data.requirements || []).map(r => reqBlock(r.requirement, r.response)).join('');
+  const reqs = (data.requirements || []).map((r, i) => reqBlock(r.requirement, r.response, i + 1)).join('');
   const phases = (data.phases || []).map((ph, i) => phaseRow(i + 1, ph.title, ph.description)).join('');
   const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
   const whyMe = (data.whyMePoints || []).map(w => `<div class="why-item"><p>${escapeHtml(w)}</p></div>`).join('');
@@ -106,9 +106,9 @@ function renderProposal(data) {
       <div class="page cta-page">
         <div class="cta-box">
           <span class="section-label">Next Step</span>
-          <h2>Ready to Begin</h2>
-          <div class="cta-line"></div>
-          <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss scope. I respond within 24 hours with honest feedback and a clear plan.')}</p>
+          <h2>Let's Build Something Solid</h2>
+          <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss scope — I respond within 24 hours with honest feedback and a clear plan.')}</p>
+          <div class="cta-btn" style="display:inline-block;background:#2563eb;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:0.95rem;margin-bottom:24px;">Message on Upwork</div>
           <div class="contact-grid">
             <div>
               <div class="label">Developer</div>
@@ -136,11 +136,14 @@ function renderProposal(data) {
   `;
 }
 
-function reqBlock(title, desc) {
+function reqBlock(title, desc, num) {
   return `
-    <div class="req-block">
-      <div class="req-title">${escapeHtml(title)}</div>
-      <p class="req-response">${escapeHtml(desc)}</p>
+    <div class="service-row">
+      <div class="service-num">${String(num).padStart(2, '0')}</div>
+      <div class="service-content">
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(desc)}</p>
+      </div>
     </div>
   `;
 }
