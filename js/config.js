@@ -23,31 +23,24 @@ JOB POST:
 Return this exact JSON structure:
 {
   "projectTitle": "clear project name, max 8 words",
-  "coverHeadline": "headline with one <span>highlighted</span> phrase in HTML",
-  "coverSubtitle": "one sentence — the client's core need only",
-  "tags": ["3-4 key technologies"],
-  "understandingLead": "1-2 sentences max — what they need, no filler",
+  "coverHeadline": "headline with one <span>highlighted</span> phrase",
+  "tags": ["3-4 technologies only — shown once on cover"],
   "requirements": [
-    { "requirement": "from job post", "response": "one short sentence — how you'll solve it" }
+    { "requirement": "one line from job", "response": "one short sentence — unique per item" }
   ],
-  "strategyOverview": "one sentence — your build approach, don't repeat stack or requirements",
-  "phases": [
-    { "title": "phase name", "description": "one short sentence" }
-  ],
-  "techStack": ["3-5 technologies"],
-  "deliverables": ["3-4 concrete items only"],
+  "deliverables": ["exactly 3 items — what they receive at the end"],
   "timeline": [
-    { "phase": "name", "duration": "e.g. Week 1-2", "output": "short deliverable" }
+    { "title": "phase", "duration": "Week 1-2", "output": "3-5 words max" }
   ],
   "closingNote": "one sentence"
 }
 
 Rules:
-- Max 4 requirements, each response one sentence
-- Max 3 phases, one sentence each
-- Max 4 deliverables
-- Never repeat goals, stack, or approach across sections — each field adds NEW information only
-- strategyOverview must not list technologies (they go in techStack)`
+- Max 3 requirements — each response must be different, one sentence
+- Max 3 deliverables — final outputs only, don't repeat requirement answers
+- No separate understanding, strategy, or phases fields
+- tags appear once on cover — don't repeat tech elsewhere
+- timeline only if job mentions a deadline — keep outputs under 5 words`
 };
 
 const TECH_KEYWORDS = {

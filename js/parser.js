@@ -97,7 +97,8 @@ function extractRequirements(text) {
 
     const bullet = trimmed.match(/^(?:[-•*]|\d+[.)])\s+(.+)/);
     if (bullet && bullet[1].length > 12) {
-      reqs.push(cleanReq(bullet[1]));
+      const req = cleanReq(bullet[1]);
+      if (!/^looking for|^seeking|^hiring/i.test(req)) reqs.push(req);
     }
   }
 
@@ -110,13 +111,14 @@ function extractRequirements(text) {
     const keywords = /must|need|require|should|looking|experience|build|develop|integrate|implement|deliver|create|setup|migrate|fix|design/i;
     for (const s of sentences) {
       const c = cleanReq(s);
+      if (/^looking for|^seeking|^hiring/i.test(c)) continue;
       if (keywords.test(c) && !reqs.some(r => r.toLowerCase() === c.toLowerCase())) {
         reqs.push(c);
       }
     }
   }
 
-  return dedupe(reqs).slice(0, 7);
+  return dedupe(reqs).slice(0, 5);
 }
 
 function cleanReq(s) {
@@ -171,10 +173,10 @@ function extractPainPoints(text, lower) {
 }
 
 function extractTimeline(text) {
-  const m = text.match(/(?:timeline|deadline|duration|within|deliver(?:y)?\s+(?:in|by|within))\s*[:\s]*(\d+\s*(?:days?|weeks?|months?)|[^.\n]{5,40})/i);
-  if (m) return cleanReq(m[1]);
   const week = text.match(/(\d+)\s*weeks?/i);
   if (week) return `${week[1]} weeks`;
+  const m = text.match(/(?:timeline|deadline|duration|within)\s*[:\s]*(\d+\s*(?:days?|weeks?|months?))/i);
+  if (m) return cleanReq(m[1]);
   return null;
 }
 

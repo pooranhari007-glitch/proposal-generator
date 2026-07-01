@@ -4,19 +4,14 @@ function renderProposal(data) {
 
   const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
   const reqs = (data.requirements || []).map((r, i) => reqBlock(r.requirement, r.response, i + 1)).join('');
-  const phases = (data.phases || []).map((ph, i) => phaseRow(i + 1, ph.title, ph.description)).join('');
   const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
   const timelineRows = (data.timeline || []).map(t => `
     <tr>
-      <td><strong>${escapeHtml(t.phase)}</strong></td>
+      <td><strong>${escapeHtml(t.title || t.phase)}</strong></td>
       <td>${escapeHtml(t.duration)}</td>
       <td>${escapeHtml(t.output)}</td>
     </tr>
   `).join('');
-  const techPills = (data.techStack || []).map(t => `<span class="tech-pill">${escapeHtml(t)}</span>`).join('');
-  const phaseBlock = (data.phases || []).length
-    ? `<div class="phase-list">${phases}</div><div class="spacer"></div>`
-    : '';
 
   return `
     <div class="proposal-doc">
@@ -27,7 +22,6 @@ function renderProposal(data) {
         </div>
         <div class="cover-main">
           <h1>${sanitizeHeadline(data.coverHeadline) || 'Your <span>Project</span>'}</h1>
-          <p class="cover-sub">${escapeHtml(data.coverSubtitle)}</p>
           <div class="cover-tags">${tags}</div>
         </div>
         <div class="cover-bottom">
@@ -45,11 +39,8 @@ function renderProposal(data) {
           <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
           <div class="page-num">02</div>
         </div>
-        <span class="section-label">Understanding</span>
-        <h2>What You Need</h2>
-        <p class="lead">${escapeHtml(data.understandingLead)}</p>
-        <span class="section-label">Requirements</span>
-        <h2>How I'll Address Each Point</h2>
+        <span class="section-label">Scope</span>
+        <h2>What You Asked For — How I'll Do It</h2>
         ${reqs}
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
       </div>
@@ -59,22 +50,8 @@ function renderProposal(data) {
           <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
           <div class="page-num">03</div>
         </div>
-        <span class="section-label">How I'll Build It</span>
-        <h2>Technical Approach</h2>
-        <p class="lead">${escapeHtml(data.strategyOverview)}</p>
-        ${phaseBlock}
-        <span class="section-label">Stack</span>
-        <div class="tech-row">${techPills}</div>
-        <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
-      </div>
-
-      <div class="page inner">
-        <div class="page-header">
-          <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
-          <div class="page-num">04</div>
-        </div>
         <span class="section-label">Deliverables</span>
-        <h2>What You Receive</h2>
+        <h2>What You Get</h2>
         <ul class="clean-list">${deliverables}</ul>
         ${data.includeTimeline && timelineRows ? `
         <div class="spacer"></div>
@@ -82,7 +59,7 @@ function renderProposal(data) {
         <h2>Milestones</h2>
         <table>
           <thead>
-            <tr><th>Phase</th><th>Duration</th><th>Output</th></tr>
+            <tr><th>Phase</th><th>When</th><th>Output</th></tr>
           </thead>
           <tbody>${timelineRows}</tbody>
         </table>` : ''}
@@ -92,8 +69,8 @@ function renderProposal(data) {
       <div class="page cta-page">
         <div class="cta-box">
           <span class="section-label">Next Step</span>
-          <h2>Let's Build Something Solid</h2>
-          <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss scope — I respond within 24 hours with honest feedback and a clear plan.')}</p>
+          <h2>Let's Talk</h2>
+          <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss.')}</p>
           <div class="cta-btn" style="display:inline-block;background:#2563eb;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:0.95rem;margin-bottom:24px;">Message on Upwork</div>
           <div class="contact-grid">
             <div>
@@ -108,14 +85,10 @@ function renderProposal(data) {
               <div class="label">GitHub</div>
               <div class="value">${escapeHtml(p.github)}</div>
             </div>
-            <div>
-              <div class="label">Year</div>
-              <div class="value">${escapeHtml(p.year)}</div>
-            </div>
           </div>
         </div>
         <div class="footer-note" style="position:relative;bottom:auto;margin-top:56px;">
-          © ${escapeHtml(p.year)} ${escapeHtml(p.name)} · Prepared exclusively for this engagement.
+          © ${escapeHtml(p.year)} ${escapeHtml(p.name)}
         </div>
       </div>
     </div>
@@ -127,18 +100,6 @@ function reqBlock(title, desc, num) {
     <div class="service-row">
       <div class="service-num">${String(num).padStart(2, '0')}</div>
       <div class="service-content">
-        <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(desc)}</p>
-      </div>
-    </div>
-  `;
-}
-
-function phaseRow(num, title, desc) {
-  return `
-    <div class="phase-item">
-      <div class="phase-num">${String(num).padStart(2, '0')}</div>
-      <div>
         <h3>${escapeHtml(title)}</h3>
         <p>${escapeHtml(desc)}</p>
       </div>

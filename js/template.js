@@ -1,33 +1,19 @@
 function generateFromTemplate(parsed, profile) {
-  const {
-    title, requirements, techStack, projectType, skills,
-    goals, painPoints, timeline, constraints
-  } = parsed;
+  const { title, requirements, techStack, projectType, timeline } = parsed;
 
   const stack = techStack.length ? techStack : inferStackFromType(projectType);
-
-  const reqs = (requirements.length ? requirements : defaultRequirements(projectType)).slice(0, 4);
-
-  const requirementItems = reqs.map((req, i) => ({
-    requirement: req,
-    response: templateResponse(req, stack, projectType, parsed, i)
-  }));
-
+  const reqs = filterRequirements(requirements, title, projectType).slice(0, 3);
+  const requirementItems = buildRequirementItems(reqs, stack, projectType);
   const phases = buildPhases(projectType, stack, parsed);
   const timelineRows = parsed.includeTimeline ? buildTimeline(phases, timeline) : [];
-  const headline = buildHeadline(title);
 
   return {
     projectTitle: title,
-    coverHeadline: headline,
-    coverSubtitle: buildCoverSubtitle(projectType, goals),
+    coverHeadline: buildHeadline(title),
     tags: stack.slice(0, 4),
-    understandingLead: buildUnderstanding(goals, painPoints, title),
     requirements: requirementItems,
-    strategyOverview: buildStrategy(projectType, goals),
-    phases: parsed.includeTimeline ? [] : phases,
-    techStack: stack.slice(0, 6),
-    deliverables: buildDeliverables(projectType, stack, parsed),
+    techStack: stack.slice(0, 5),
+    deliverables: buildDeliverables(projectType, stack),
     timeline: timelineRows,
     includeTimeline: parsed.includeTimeline,
     closingNote: buildClosing(timeline),
@@ -35,8 +21,30 @@ function generateFromTemplate(parsed, profile) {
   };
 }
 
-function capitalize(s) {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+function filterRequirements(requirements, title, projectType) {
+  const titleKey = title.toLowerCase().slice(0, 25);
+  const defaults = defaultRequirements(projectType);
+  const filtered = (requirements.length ? requirements : defaults).filter((req) => {
+    const lower = req.toLowerCase();
+    if (req.length > 90) return false;
+    if (/^looking for|^seeking|^hiring|^we are looking/i.test(req)) return false;
+    if (lower === title.toLowerCase()) return false;
+    if (titleKey.length > 12 && lower.startsWith(titleKey)) return false;
+    return true;
+  });
+  return filtered.length ? dedupe(filtered) : defaults;
+}
+
+function buildRequirementItems(reqs, stack, projectType) {
+  const used = new Set();
+  return reqs.map((req, i) => {
+    let response = templateResponse(req, stack, projectType, i);
+    if (used.has(response)) {
+      response = `Covered in ${stack[0] || 'the build'} — tested and signed off with you.`;
+    }
+    used.add(response);
+    return { requirement: req, response };
+  });
 }
 
 function inferStackFromType(type) {
@@ -56,120 +64,94 @@ function inferStackFromType(type) {
 
 function defaultRequirements(type) {
   return [
-    `Production-ready ${type} aligned to your scope`,
-    'Clean handover with docs and full source ownership'
+    `Deliver a production-ready ${type}`,
+    'Hand over source code and documentation'
   ];
 }
 
 function buildHeadline(title) {
   const short = title.length > 42 ? title.slice(0, 40) + '…' : title;
-  return `A focused plan for <span>${escapeHtml(short)}</span>`;
-}
-
-function buildCoverSubtitle(projectType, goals) {
-  if (goals[0]) return truncate(goals[0], 100);
-  return `A clear plan for your ${projectType} — direct with me, no agency layers.`;
-}
-
-function buildUnderstanding(goals, painPoints, title) {
-  if (goals[0] && painPoints[0]) {
-    return `You need ${truncate(title.toLowerCase(), 60)} — specifically ${truncate(goals[0].toLowerCase(), 80)}. ${truncate(painPoints[0], 70)}.`;
-  }
-  if (goals[0]) return `You need ${truncate(title.toLowerCase(), 60)} focused on ${truncate(goals[0].toLowerCase(), 100)}.`;
-  return `Here's how I'd handle ${truncate(title.toLowerCase(), 80)} — point by point below.`;
-}
-
-function buildStrategy(projectType, goals) {
-  if (goals[0]) {
-    return `I'll build this as a ${projectType} focused on ${truncate(goals[0].toLowerCase(), 80)} — working increments you review before we move on.`;
-  }
-  return `I'll build this in working increments you review before we move on — no surprises at the end.`;
+  return `Proposal for <span>${escapeHtml(short)}</span>`;
 }
 
 function buildPhases(projectType, stack, parsed) {
   const tl = parsed.timeline;
   return [
-    {
-      title: 'Scope & Setup',
-      description: `Align on requirements and ${stack.slice(0, 2).join(' + ')}.${tl ? ` Target: ${tl}.` : ''}`
-    },
-    {
-      title: 'Build & Review',
-      description: `Core ${projectType} features on staging — you review, I adjust.`
-    },
-    {
-      title: 'Launch & Handover',
-      description: 'Deploy, docs, and full code transfer to you.'
-    }
+    { title: 'Scope', duration: tl ? `Wk 1` : 'Week 1', output: `Lock requirements & ${stack[0] || 'stack'}` },
+    { title: 'Build', duration: tl ? `Wk 2–3` : 'Week 2–4', output: `Core ${projectType} on staging` },
+    { title: 'Ship', duration: tl ? `Wk 4+` : 'Week 5+', output: 'Deploy + handover' }
   ];
 }
 
-function templateResponse(req, stack, projectType, parsed, index) {
+function templateResponse(req, stack, projectType, index) {
   const lower = req.toLowerCase();
   const primary = stack[0] || 'the agreed stack';
-  const secondary = stack[1] || 'supporting services';
 
   const rules = [
-    [/stripe|payment|billing|checkout|subscription/, () =>
-      `${/stripe/i.test(req) ? 'Stripe' : 'Payment'} flows with webhooks tested before go-live.`],
-    [/api|integrat|webhook|third.party|connect/, () =>
-      `REST endpoints with typed contracts and end-to-end integration tests.`],
-    [/auth|login|user|signup|register|oauth/, () =>
-      `Secure auth with roles and password reset — OWASP basics covered.`],
-    [/ui|ux|design|responsive|frontend|react|vue|angular|mobile/, () =>
-      `Mobile-first UI in ${primary} — accessible and fast on real devices.`],
-    [/database|data|sql|mongo|postgres|schema|migration/, () =>
-      `Clean schema, migrations, and indexes in ${/postgres/i.test(req) ? 'PostgreSQL' : secondary}.`],
-    [/deploy|host|aws|docker|ci|devops|server|infrastructure/, () =>
-      `Staging + production with CI — you keep full control of hosting.`],
-    [/ai|ml|chatbot|openai|gpt|llm|automation|scraper|bot/, () =>
-      `Reliable automation with error handling, rate limits, and cost controls.`],
-    [/test|qa|quality|bug/, () =>
-      `Tests on critical paths plus a QA sign-off each milestone.`],
-    [/seo|performance|speed|optim/, () =>
-      `Performance benchmarks and Core Web Vitals before launch.`],
-    [/admin|dashboard|portal|crm|report/, () =>
-      `Admin views with filtering and export — built for daily use.`],
-    [/migrat|legacy|refactor|rewrite/, () =>
-      `Phased migration with rollback at each step.`],
-    [/document|readme|handover|training/, () =>
-      `Setup docs and a walkthrough so your team can maintain it.`]
+    [/stripe|payment|billing|checkout/, () => 'Stripe/payment flows with webhook testing.'],
+    [/webhook/, () => 'Webhook handlers with retries and logging.'],
+    [/aws|deploy|host|docker|ci|devops|infrastructure/, () => 'AWS deploy with staging + production.'],
+    [/api|integrat|third.party|connect/, () => 'REST API with typed contracts and tests.'],
+    [/auth|login|signup|oauth/, () => 'Auth with roles and secure sessions.'],
+    [/ui|ux|frontend|react|vue|mobile|responsive/, () => `UI in ${primary} — mobile-first.`],
+    [/database|postgres|mongo|sql|schema/, () => `Data layer in ${stack[1] || primary}.`],
+    [/django|flask|fastapi|python/, () => `Backend in Python — clean and documented.`],
+    [/automation|scraper|bot|llm|ai|openai/, () => 'Automation with error handling and rate limits.'],
+    [/test|qa|bug/, () => 'Tests on critical paths before each milestone.'],
+    [/admin|dashboard|portal|crm/, () => 'Admin panel with filters and export.'],
+    [/document|handover|training/, () => 'Docs + walkthrough for your team.']
   ];
 
   for (const [pattern, fn] of rules) {
     if (pattern.test(lower)) return fn();
   }
 
-  return `I'll handle this in ${primary} — scoped, tested, and reviewed with you before sign-off.`;
+  const fallbacks = [
+    `Built in ${primary}, reviewed with you before sign-off.`,
+    'Scoped, tested, and delivered in your repo.',
+    'Handled end-to-end — no subcontracting.'
+  ];
+  return fallbacks[index % fallbacks.length];
 }
 
 function buildTimeline(phases, jobTimeline) {
-  const weekMap = jobTimeline?.match(/(\d+)/);
-  const totalWeeks = weekMap ? Math.max(parseInt(weekMap[1], 10), 4) : 8;
-  const perPhase = Math.max(1, Math.floor(totalWeeks / phases.length));
+  const weekMatch = jobTimeline?.match(/(\d+)/);
+  if (!weekMatch) return phases;
 
+  const total = Math.max(parseInt(weekMatch[1], 10), 3);
+  const chunk = Math.max(1, Math.floor(total / phases.length));
   return phases.map((p, i) => ({
-    phase: p.title,
-    duration: `Week ${i * perPhase + 1}–${(i + 1) * perPhase}`,
-    output: p.description
+    ...p,
+    duration: `Week ${i * chunk + 1}–${Math.min((i + 1) * chunk, total)}`
   }));
 }
 
-function buildDeliverables(projectType, stack, parsed) {
-  const items = [
-    `Working ${projectType} in your repo`,
-    'Staging + production deployment'
+function buildDeliverables(projectType, stack) {
+  return [
+    `${capitalize(projectType)} in your repo`,
+    stack[0] ? `Built with ${stack.slice(0, 2).join(' + ')}` : 'Full source code',
+    /api|backend|automation/.test(projectType) ? 'API docs + deployment' : 'Deployed staging environment'
   ];
-  if (/api|backend/.test(projectType)) items.push('API docs with examples');
-  else if (/mobile/.test(projectType)) items.push('Test builds for iOS/Android');
-  else items.push(`Source in ${stack[0] || 'your stack'}`);
-  items.push('30-day post-launch support');
-  return items.slice(0, 4);
 }
 
 function buildClosing(timeline) {
-  const tl = timeline ? ` Happy to align to ${timeline}.` : '';
-  return `Message me on Upwork to get started.${tl}`;
+  return timeline
+    ? `Message me on Upwork — I can work within ${timeline}.`
+    : 'Message me on Upwork to get started.';
+}
+
+function capitalize(s) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+function dedupe(arr) {
+  const seen = new Set();
+  return arr.filter((item) => {
+    const key = item.toLowerCase().slice(0, 40);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function truncate(s, n) {
