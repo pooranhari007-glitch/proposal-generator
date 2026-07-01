@@ -23,7 +23,134 @@
 
 .proposal-doc .page:last-child { page-break-after: auto; }
 
-/* Cover */
+.proposal-doc .brief-page {
+  padding: 36px 44px 32px;
+  min-height: auto;
+}
+
+.proposal-doc .brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.proposal-doc .brief-brand {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1d4ed8;
+}
+
+.proposal-doc .brief-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.proposal-doc .brief-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 20px;
+  line-height: 1.25;
+}
+
+.proposal-doc .brief-block {
+  margin-bottom: 18px;
+}
+
+.proposal-doc .brief-block h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #047857;
+  background: #d1fae5;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.proposal-doc .brief-block p {
+  font-size: 0.92rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.proposal-doc .brief-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.proposal-doc .brief-list li {
+  font-size: 0.9rem;
+  color: #475569;
+  padding: 6px 0 6px 18px;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.proposal-doc .brief-list li:last-child { border-bottom: none; }
+
+.proposal-doc .brief-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.proposal-doc .brief-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 18px;
+  font-size: 0.8rem;
+}
+
+.proposal-doc .brief-table th {
+  background: #1d4ed8;
+  color: #fff;
+  text-align: left;
+  padding: 6px 10px;
+  font-weight: 600;
+}
+
+.proposal-doc .brief-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.proposal-doc .brief-cta {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+.proposal-doc .brief-cta p {
+  font-size: 1rem;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.proposal-doc .brief-cta strong { color: #1d4ed8; }
+
+.proposal-doc .brief-name {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Cover — legacy */
 .proposal-doc .cover {
   background: linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 45%, #2563eb 100%);
   color: #fff;

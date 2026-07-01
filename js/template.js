@@ -9,14 +9,10 @@ function generateFromTemplate(parsed, profile) {
 
   return {
     projectTitle: title,
-    coverHeadline: buildHeadline(title),
-    tags: stack.slice(0, 4),
-    requirements: requirementItems,
-    techStack: stack.slice(0, 5),
-    deliverables: buildDeliverables(projectType, stack),
+    task: buildTask(reqs, title, projectType),
+    solution: buildSolution(requirementItems, stack, projectType, timeline, parsed.includeTimeline),
     timeline: timelineRows,
     includeTimeline: parsed.includeTimeline,
-    closingNote: buildClosing(timeline),
     profile
   };
 }
@@ -40,11 +36,23 @@ function buildRequirementItems(reqs, stack, projectType) {
   return reqs.map((req, i) => {
     let response = templateResponse(req, stack, projectType, i);
     if (used.has(response)) {
-      response = `Covered in ${stack[0] || 'the build'} — tested and signed off with you.`;
+      response = `Handled in ${stack[0] || 'the build'} with your sign-off.`;
     }
     used.add(response);
     return { requirement: req, response };
   });
+}
+
+function buildTask(reqs, title, projectType) {
+  if (reqs.length) return reqs.map((r) => truncate(r, 100));
+  return [truncate(title, 100) || `Production-ready ${projectType}`];
+}
+
+function buildSolution(items, stack, projectType, timeline, includeTimeline) {
+  const stackNote = stack.slice(0, 3).join(', ');
+  const points = items.map((i) => i.response).join(' ');
+  const tl = includeTimeline && timeline ? ` I can align to ${timeline}.` : '';
+  return `I'll deliver this as a ${projectType} using ${stackNote}. ${points}${tl}`.replace(/\s+/g, ' ').trim();
 }
 
 function inferStackFromType(type) {
@@ -63,23 +71,15 @@ function inferStackFromType(type) {
 }
 
 function defaultRequirements(type) {
-  return [
-    `Deliver a production-ready ${type}`,
-    'Hand over source code and documentation'
-  ];
-}
-
-function buildHeadline(title) {
-  const short = title.length > 42 ? title.slice(0, 40) + '…' : title;
-  return `Proposal for <span>${escapeHtml(short)}</span>`;
+  return [`Production-ready ${type}`, 'Source code and docs handed over to you'];
 }
 
 function buildPhases(projectType, stack, parsed) {
   const tl = parsed.timeline;
   return [
-    { title: 'Scope', duration: tl ? `Wk 1` : 'Week 1', output: `Lock requirements & ${stack[0] || 'stack'}` },
-    { title: 'Build', duration: tl ? `Wk 2–3` : 'Week 2–4', output: `Core ${projectType} on staging` },
-    { title: 'Ship', duration: tl ? `Wk 4+` : 'Week 5+', output: 'Deploy + handover' }
+    { title: 'Scope', duration: 'Week 1', output: `Requirements + ${stack[0] || 'stack'}` },
+    { title: 'Build', duration: tl ? 'Week 2–3' : 'Week 2–4', output: `Core ${projectType}` },
+    { title: 'Ship', duration: tl ? 'Week 4+' : 'Week 5+', output: 'Deploy + handover' }
   ];
 }
 
@@ -88,60 +88,36 @@ function templateResponse(req, stack, projectType, index) {
   const primary = stack[0] || 'the agreed stack';
 
   const rules = [
-    [/stripe|payment|billing|checkout/, () => 'Stripe/payment flows with webhook testing.'],
-    [/webhook/, () => 'Webhook handlers with retries and logging.'],
-    [/aws|deploy|host|docker|ci|devops|infrastructure/, () => 'AWS deploy with staging + production.'],
-    [/api|integrat|third.party|connect/, () => 'REST API with typed contracts and tests.'],
-    [/auth|login|signup|oauth/, () => 'Auth with roles and secure sessions.'],
-    [/ui|ux|frontend|react|vue|mobile|responsive/, () => `UI in ${primary} — mobile-first.`],
-    [/database|postgres|mongo|sql|schema/, () => `Data layer in ${stack[1] || primary}.`],
-    [/django|flask|fastapi|python/, () => `Backend in Python — clean and documented.`],
-    [/automation|scraper|bot|llm|ai|openai/, () => 'Automation with error handling and rate limits.'],
-    [/test|qa|bug/, () => 'Tests on critical paths before each milestone.'],
-    [/admin|dashboard|portal|crm/, () => 'Admin panel with filters and export.'],
-    [/document|handover|training/, () => 'Docs + walkthrough for your team.']
+    [/stripe|payment|billing|checkout/, () => 'Payment flows with webhook testing.'],
+    [/webhook/, () => 'Webhook handlers with retries.'],
+    [/aws|deploy|host|docker|ci|devops/, () => 'AWS/staging + production deploy.'],
+    [/api|integrat|third.party|connect/, () => 'REST API with tests.'],
+    [/auth|login|signup|oauth/, () => 'Secure auth and roles.'],
+    [/ui|ux|frontend|react|vue|mobile/, () => `UI in ${primary}.`],
+    [/database|postgres|mongo|sql/, () => `Data layer in ${stack[1] || primary}.`],
+    [/django|flask|fastapi|python/, () => 'Python backend, documented.'],
+    [/automation|scraper|bot|llm|ai|openai/, () => 'Automation with error handling.'],
+    [/test|qa|bug/, () => 'Tested before each milestone.'],
+    [/admin|dashboard|portal|crm/, () => 'Admin panel with export.'],
+    [/document|handover/, () => 'Docs + walkthrough.']
   ];
 
   for (const [pattern, fn] of rules) {
     if (pattern.test(lower)) return fn();
   }
 
-  const fallbacks = [
-    `Built in ${primary}, reviewed with you before sign-off.`,
-    'Scoped, tested, and delivered in your repo.',
-    'Handled end-to-end — no subcontracting.'
-  ];
-  return fallbacks[index % fallbacks.length];
+  return `Built in ${primary}, reviewed with you.`;
 }
 
 function buildTimeline(phases, jobTimeline) {
   const weekMatch = jobTimeline?.match(/(\d+)/);
   if (!weekMatch) return phases;
-
   const total = Math.max(parseInt(weekMatch[1], 10), 3);
   const chunk = Math.max(1, Math.floor(total / phases.length));
   return phases.map((p, i) => ({
     ...p,
-    duration: `Week ${i * chunk + 1}–${Math.min((i + 1) * chunk, total)}`
+    duration: `Wk ${i * chunk + 1}–${Math.min((i + 1) * chunk, total)}`
   }));
-}
-
-function buildDeliverables(projectType, stack) {
-  return [
-    `${capitalize(projectType)} in your repo`,
-    stack[0] ? `Built with ${stack.slice(0, 2).join(' + ')}` : 'Full source code',
-    /api|backend|automation/.test(projectType) ? 'API docs + deployment' : 'Deployed staging environment'
-  ];
-}
-
-function buildClosing(timeline) {
-  return timeline
-    ? `Message me on Upwork — I can work within ${timeline}.`
-    : 'Message me on Upwork to get started.';
-}
-
-function capitalize(s) {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 
 function dedupe(arr) {

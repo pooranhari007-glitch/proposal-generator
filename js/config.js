@@ -22,25 +22,19 @@ JOB POST:
 
 Return this exact JSON structure:
 {
-  "projectTitle": "clear project name, max 8 words",
-  "coverHeadline": "headline with one <span>highlighted</span> phrase",
-  "tags": ["3-4 technologies only — shown once on cover"],
-  "requirements": [
-    { "requirement": "one line from job", "response": "one short sentence — unique per item" }
-  ],
-  "deliverables": ["exactly 3 items — what they receive at the end"],
+  "projectTitle": "short project name",
+  "task": ["2-3 bullet points — what the client needs, one line each"],
+  "solution": "one short paragraph — your proposal solution, first person",
   "timeline": [
-    { "title": "phase", "duration": "Week 1-2", "output": "3-5 words max" }
-  ],
-  "closingNote": "one sentence"
+    { "title": "phase", "duration": "Wk 1-2", "output": "3-5 words" }
+  ]
 }
 
 Rules:
-- Max 3 requirements — each response must be different, one sentence
-- Max 3 deliverables — final outputs only, don't repeat requirement answers
-- No separate understanding, strategy, or phases fields
-- tags appear once on cover — don't repeat tech elsewhere
-- timeline only if job mentions a deadline — keep outputs under 5 words`
+- task: max 3 items, each under 15 words
+- solution: one paragraph only, max 60 words, don't repeat task verbatim
+- timeline: only if job mentions deadline — max 3 rows
+- No other fields`
 };
 
 const TECH_KEYWORDS = {

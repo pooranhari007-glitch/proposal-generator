@@ -1,115 +1,52 @@
 function renderProposal(data) {
   const p = data.profile || DEFAULT_PROFILE;
-  const brandParts = (p.brand || 'Veena').split(' ');
-  const pageLogo = brandParts[1]
-    ? `${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1])}</span>`
-    : escapeHtml(p.brand || p.name || 'Veena');
+  const brand = escapeHtml(p.brand || p.name || 'Veena');
 
-  const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
-  const reqs = (data.requirements || []).map((r, i) => reqBlock(r.requirement, r.response, i + 1)).join('');
-  const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
+  const taskItems = (data.task || []).map(t => `<li>${escapeHtml(t)}</li>`).join('');
   const timelineRows = (data.timeline || []).map(t => `
     <tr>
-      <td><strong>${escapeHtml(t.title || t.phase)}</strong></td>
+      <td>${escapeHtml(t.title || t.phase)}</td>
       <td>${escapeHtml(t.duration)}</td>
       <td>${escapeHtml(t.output)}</td>
     </tr>
   `).join('');
 
   const timelineBlock = data.includeTimeline && timelineRows ? `
-        <div class="section-block">
-          <span class="section-label">Timeline</span>
-          <h2>Milestones</h2>
-          <table>
-            <thead>
-              <tr><th>Phase</th><th>When</th><th>Output</th></tr>
-            </thead>
-            <tbody>${timelineRows}</tbody>
-          </table>
-        </div>` : '';
+    <table class="brief-table">
+      <thead><tr><th>Phase</th><th>When</th><th>Output</th></tr></thead>
+      <tbody>${timelineRows}</tbody>
+    </table>` : '';
 
   return `
     <div class="proposal-doc">
-      <div class="page cover">
-        <div class="cover-top">
-          <div class="cover-badge">${escapeHtml(p.badge)}</div>
-          <div class="cover-year">${escapeHtml(p.year)}</div>
-        </div>
-        <div class="cover-main">
-          <h1>${sanitizeHeadline(data.coverHeadline) || 'Your <span>Project</span>'}</h1>
-          <div class="cover-tags">${tags}</div>
-        </div>
-        <div class="cover-bottom">
-          <div class="cover-contact">
-            <strong>${escapeHtml(p.name)}</strong>
-            <span>${escapeHtml(p.title)}</span>
+      <div class="page brief-page">
+        <div class="brief-header">
+          <div class="brief-brand">${brand}</div>
+          <div class="brief-contact">
             <span>${escapeHtml(p.upwork)}</span>
             <span>${escapeHtml(p.github)}</span>
           </div>
         </div>
-      </div>
 
-      <div class="page inner">
-        <div class="page-header">
-          <div class="page-logo">${pageLogo}</div>
-          <div class="page-num">02</div>
+        <h1 class="brief-title">${escapeHtml(data.projectTitle)}</h1>
+
+        <div class="brief-block">
+          <h2>Task</h2>
+          <ul class="brief-list">${taskItems}</ul>
         </div>
-        <div class="section-block">
-          <span class="section-label">Scope</span>
-          <h2>What You Asked For — How I'll Do It</h2>
-          ${reqs}
+
+        <div class="brief-block">
+          <h2>My proposal solution</h2>
+          <p>${escapeHtml(data.solution)}</p>
         </div>
-        <div class="section-block">
-          <span class="section-label">Deliverables</span>
-          <h2>What You Get</h2>
-          <ul class="clean-list">${deliverables}</ul>
-        </div>
+
         ${timelineBlock}
-        <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
-      </div>
 
-      <div class="page cta-page">
-        <div class="cta-box">
-          <span class="section-label">Next Step</span>
-          <h2>Let's Talk</h2>
-          <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss.')}</p>
-          <div class="cta-btn" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 28px;border-radius:10px;font-weight:700;font-size:0.9rem;margin-bottom:16px;">Message on Upwork</div>
-          <div class="contact-grid">
-            <div>
-              <div class="label">Developer</div>
-              <div class="value">${escapeHtml(p.name)}</div>
-            </div>
-            <div>
-              <div class="label">Upwork</div>
-              <div class="value">${escapeHtml(p.upwork)}</div>
-            </div>
-            <div>
-              <div class="label">GitHub</div>
-              <div class="value">${escapeHtml(p.github)}</div>
-            </div>
-          </div>
-        </div>
-        <div class="footer-note" style="margin-top:20px;">
-          © ${escapeHtml(p.year)} ${escapeHtml(p.name)}
+        <div class="brief-cta">
+          <p><strong>Let's chat further</strong> — message me on Upwork.</p>
+          <span class="brief-name">${escapeHtml(p.name)} · ${escapeHtml(p.year)}</span>
         </div>
       </div>
     </div>
   `;
-}
-
-function reqBlock(title, desc, num) {
-  return `
-    <div class="service-row">
-      <div class="service-num">${String(num).padStart(2, '0')}</div>
-      <div class="service-content">
-        <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(desc)}</p>
-      </div>
-    </div>
-  `;
-}
-
-function sanitizeHeadline(html) {
-  if (!html) return '';
-  return String(html).replace(/<(?!\/?span\b)[^>]+>/gi, '');
 }

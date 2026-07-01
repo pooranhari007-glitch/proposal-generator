@@ -43,15 +43,18 @@ async function generateWithAI(jobPost, settings, includeTimeline = false) {
 }
 
 function normalizeProposal(data, profile, includeTimeline = false) {
+  const task = Array.isArray(data.task)
+    ? data.task.slice(0, 3)
+    : Array.isArray(data.requirements)
+      ? data.requirements.map(r => r.requirement || r).slice(0, 3)
+      : [];
+
   return {
     projectTitle: data.projectTitle || 'Software Development Proposal',
-    coverHeadline: data.coverHeadline || 'Your <span>Project</span>',
-    tags: Array.isArray(data.tags) ? data.tags.slice(0, 4) : (Array.isArray(data.techStack) ? data.techStack.slice(0, 4) : []),
-    requirements: Array.isArray(data.requirements) ? data.requirements.slice(0, 3) : [],
-    deliverables: Array.isArray(data.deliverables) ? data.deliverables.slice(0, 3) : [],
+    task,
+    solution: data.solution || data.strategyOverview || '',
     timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 3) : [],
     includeTimeline,
-    closingNote: data.closingNote || '',
     profile
   };
 }
