@@ -124,24 +124,40 @@ const STORAGE_KEYS = {
   model: 'pg_model'
 };
 
+function storageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* private browsing or blocked storage */
+  }
+}
+
 function loadSettings() {
-  const profile = { ...DEFAULT_PROFILE, ...safeParse(localStorage.getItem(STORAGE_KEYS.profile)) };
-  const prompts = { ...DEFAULT_PROMPTS, ...safeParse(localStorage.getItem(STORAGE_KEYS.prompts)) };
+  const profile = { ...DEFAULT_PROFILE, ...safeParse(storageGet(STORAGE_KEYS.profile)) };
+  const prompts = { ...DEFAULT_PROMPTS, ...safeParse(storageGet(STORAGE_KEYS.prompts)) };
   return {
     profile,
     prompts,
-    apiKey: localStorage.getItem(STORAGE_KEYS.apiKey) || '',
-    mode: localStorage.getItem(STORAGE_KEYS.mode) || 'template',
-    model: localStorage.getItem(STORAGE_KEYS.model) || 'gpt-4o-mini'
+    apiKey: storageGet(STORAGE_KEYS.apiKey) || '',
+    mode: storageGet(STORAGE_KEYS.mode) || 'template',
+    model: storageGet(STORAGE_KEYS.model) || 'gpt-4o-mini'
   };
 }
 
 function saveSettings(settings) {
-  localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(settings.profile));
-  localStorage.setItem(STORAGE_KEYS.prompts, JSON.stringify(settings.prompts));
-  localStorage.setItem(STORAGE_KEYS.apiKey, settings.apiKey);
-  localStorage.setItem(STORAGE_KEYS.mode, settings.mode);
-  localStorage.setItem(STORAGE_KEYS.model, settings.model);
+  storageSet(STORAGE_KEYS.profile, JSON.stringify(settings.profile));
+  storageSet(STORAGE_KEYS.prompts, JSON.stringify(settings.prompts));
+  storageSet(STORAGE_KEYS.apiKey, settings.apiKey);
+  storageSet(STORAGE_KEYS.mode, settings.mode);
+  storageSet(STORAGE_KEYS.model, settings.model);
 }
 
 function safeParse(str) {

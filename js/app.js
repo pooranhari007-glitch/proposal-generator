@@ -28,6 +28,7 @@ function init() {
   populateForm();
   bindEvents();
   updateModeUI();
+  window.addEventListener('resize', updatePreviewScale);
 }
 
 function populateForm() {
@@ -53,7 +54,7 @@ function bindEvents() {
 
 function setMode(mode) {
   settings.mode = mode;
-  localStorage.setItem(STORAGE_KEYS.mode, mode);
+  storageSet(STORAGE_KEYS.mode, mode);
   updateModeUI();
 }
 
@@ -123,15 +124,22 @@ async function handleGenerate() {
   }
 }
 
+function updatePreviewScale() {
+  if (!currentProposal || els.previewFrame.classList.contains('hidden')) return;
+
+  const width = els.previewFrame.parentElement?.clientWidth || 0;
+  const scale = Math.max(0.25, Math.min(1, (width - 64) / 794));
+  els.previewFrame.style.transform = `scale(${scale})`;
+  els.previewFrame.style.marginBottom = `${-(297 * 5 * (1 - scale))}mm`;
+}
+
 function showPreview(proposal) {
   const html = renderProposal(proposal);
   els.previewFrame.innerHTML = html;
   els.previewFrame.classList.remove('hidden');
   els.previewEmpty.classList.add('hidden');
-
-  const scale = Math.min(1, (els.previewFrame.parentElement.clientWidth - 64) / 794);
-  els.previewFrame.style.transform = `scale(${scale})`;
-  els.previewFrame.style.marginBottom = `${-(297 * 5 * (1 - scale))}mm`;
+  updatePreviewScale();
+  els.previewFrame.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 async function handleDownload() {
