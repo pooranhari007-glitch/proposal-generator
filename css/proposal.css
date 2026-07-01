@@ -43,6 +43,8 @@
   color: #1d4ed8;
 }
 
+.proposal-doc .brief-brand span { color: #10b981; }
+
 .proposal-doc .brief-contact {
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 const DEFAULT_PROFILE = {
   name: 'Veena',
-  brand: 'Veena',
+  brand: 'Veena Dev',
   title: 'Independent Developer & Consultant',
   upwork: 'upwork.com/freelancers/~01f65823609a7aac5f',
   github: 'github.com/Fullstackdeveloper4545',
@@ -24,7 +24,7 @@ Return this exact JSON structure:
 {
   "projectTitle": "short project name",
   "task": ["2-3 bullet points — what the client needs, one line each"],
-  "solution": "one short paragraph — your proposal solution, first person",
+  "solution": "2-3 sentences — stack, how you'll solve each task, what they receive at the end",
   "timeline": [
     { "title": "phase", "duration": "Wk 1-2", "output": "3-5 words" }
   ]
@@ -32,7 +32,7 @@ Return this exact JSON structure:
 
 Rules:
 - task: max 3 items, each under 15 words
-- solution: one paragraph only, max 60 words, don't repeat task verbatim
+- solution: 2-3 sentences, max 80 words — mention stack, approach per task, and handover
 - timeline: only if job mentions deadline — max 3 rows
 - No other fields`
 };

@@ -44,15 +44,15 @@ function buildRequirementItems(reqs, stack, projectType) {
 }
 
 function buildTask(reqs, title, projectType) {
-  if (reqs.length) return reqs.map((r) => truncate(r, 100));
-  return [truncate(title, 100) || `Production-ready ${projectType}`];
+  if (reqs.length) return reqs.map((r) => truncate(r, 120));
+  return [truncate(title, 120) || `Production-ready ${projectType}`];
 }
 
 function buildSolution(items, stack, projectType, timeline, includeTimeline) {
   const stackNote = stack.slice(0, 3).join(', ');
-  const points = items.map((i) => i.response).join(' ');
-  const tl = includeTimeline && timeline ? ` I can align to ${timeline}.` : '';
-  return `I'll deliver this as a ${projectType} using ${stackNote}. ${points}${tl}`.replace(/\s+/g, ' ').trim();
+  const details = [...new Set(items.map((i) => i.response))].join(' ');
+  const tl = includeTimeline && timeline ? ` I can align to your ${timeline} timeline.` : '';
+  return `I'll deliver this as a ${projectType} using ${stackNote}. ${details} You'll get working code in your repo, a staging environment to review, and full documentation at handover.${tl}`.replace(/\s+/g, ' ').trim();
 }
 
 function inferStackFromType(type) {

@@ -1,6 +1,9 @@
 function renderProposal(data) {
   const p = data.profile || DEFAULT_PROFILE;
-  const brand = escapeHtml(p.brand || p.name || 'Veena');
+  const brandParts = (p.brand || 'Veena Dev').split(' ');
+  const brandHtml = brandParts[1]
+    ? `${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1])}</span>`
+    : escapeHtml(p.brand || p.name);
 
   const taskItems = (data.task || []).map(t => `<li>${escapeHtml(t)}</li>`).join('');
   const timelineRows = (data.timeline || []).map(t => `
@@ -21,7 +24,7 @@ function renderProposal(data) {
     <div class="proposal-doc">
       <div class="page brief-page">
         <div class="brief-header">
-          <div class="brief-brand">${brand}</div>
+          <div class="brief-brand">${brandHtml}</div>
           <div class="brief-contact">
             <span>${escapeHtml(p.upwork)}</span>
             <span>${escapeHtml(p.github)}</span>
@@ -43,8 +46,8 @@ function renderProposal(data) {
         ${timelineBlock}
 
         <div class="brief-cta">
-          <p><strong>Let's chat further</strong> — message me on Upwork.</p>
-          <span class="brief-name">${escapeHtml(p.name)} · ${escapeHtml(p.year)}</span>
+          <p><strong>Let's chat further</strong> — message me on Upwork or email.</p>
+          <span class="brief-name">${escapeHtml(p.name)} · ${escapeHtml(p.brand || 'Veena Dev')} · ${escapeHtml(p.year)}</span>
         </div>
       </div>
     </div>

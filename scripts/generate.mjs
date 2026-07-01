@@ -48,7 +48,7 @@ function parseArgs(argv) {
 }
 
 function buildCoverNote(proposal) {
-  return `Task: ${(proposal.task || []).join('; ')}. My proposal: ${proposal.solution} Let's chat further on Upwork. — Veena`;
+  return `Task: ${(proposal.task || []).join('; ')}. My proposal solution: ${proposal.solution} Let's chat further — Upwork or email. — Veena Dev`;
 }
 
 async function main() {
