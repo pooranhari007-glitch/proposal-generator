@@ -158,16 +158,3 @@ function sanitizeHeadline(html) {
   if (!html) return '';
   return String(html).replace(/<(?!\/?span\b)[^>]+>/gi, '');
 }
-
-function renderDemoPlan(demo) {
-  if (!demo) return '';
-  const items = (demo.items || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
-  return `
-    <span class="section-label">Early Demo</span>
-    <div class="demo-block">
-      <h3>${escapeHtml(demo.title || 'Proof of Approach')}</h3>
-      <p>${escapeHtml(demo.description || '')}</p>
-      ${items ? `<ul class="clean-list">${items}</ul>` : ''}
-    </div>
-  `;
-}
