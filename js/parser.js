@@ -105,15 +105,14 @@ function extractRequirements(text) {
   if (reqs.length < 3) {
     const sentences = text
       .split(/[.!?\n]+/)
-      .map(s => s.trim())
-      .filter(s => s.length > 25 && s.length < 220);
+      .map(s => cleanReq(s))
+      .filter(s => s.length > 10 && s.length < 120);
 
-    const keywords = /must|need|require|should|looking|experience|build|develop|integrate|implement|deliver|create|setup|migrate|fix|design/i;
+    const keywords = /must|need|require|should|build|develop|integrate|implement|deliver|create|deploy|aws|webhook|api|django|python/i;
     for (const s of sentences) {
-      const c = cleanReq(s);
-      if (/^looking for|^seeking|^hiring/i.test(c)) continue;
-      if (keywords.test(c) && !reqs.some(r => r.toLowerCase() === c.toLowerCase())) {
-        reqs.push(c);
+      if (/^looking for|^seeking|^hiring/i.test(s)) continue;
+      if (keywords.test(s) && !reqs.some(r => r.toLowerCase() === s.toLowerCase())) {
+        reqs.push(s);
       }
     }
   }
