@@ -43,19 +43,19 @@ async function generateWithAI(jobPost, settings, includeTimeline = false) {
 }
 
 function normalizeProposal(data, profile, includeTimeline = false) {
+  const phases = Array.isArray(data.phases) ? data.phases.slice(0, 3) : [];
   return {
     projectTitle: data.projectTitle || 'Software Development Proposal',
     coverHeadline: data.coverHeadline || 'Your Project — <span>Built Right</span>',
     coverSubtitle: data.coverSubtitle || '',
-    tags: Array.isArray(data.tags) ? data.tags.slice(0, 8) : [],
+    tags: Array.isArray(data.tags) ? data.tags.slice(0, 4) : [],
     understandingLead: data.understandingLead || '',
-    solution: data.solution || null,
-    requirements: Array.isArray(data.requirements) ? data.requirements.slice(0, 8) : [],
+    requirements: Array.isArray(data.requirements) ? data.requirements.slice(0, 4) : [],
     strategyOverview: data.strategyOverview || '',
-    phases: Array.isArray(data.phases) ? data.phases.slice(0, 5) : [],
-    techStack: Array.isArray(data.techStack) ? data.techStack : [],
-    deliverables: Array.isArray(data.deliverables) ? data.deliverables : [],
-    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 6) : [],
+    phases: includeTimeline ? [] : phases,
+    techStack: Array.isArray(data.techStack) ? data.techStack.slice(0, 6) : [],
+    deliverables: Array.isArray(data.deliverables) ? data.deliverables.slice(0, 4) : [],
+    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 4) : [],
     includeTimeline,
     closingNote: data.closingNote || '',
     profile

@@ -14,7 +14,9 @@ function renderProposal(data) {
     </tr>
   `).join('');
   const techPills = (data.techStack || []).map(t => `<span class="tech-pill">${escapeHtml(t)}</span>`).join('');
-  const solution = data.solution || {};
+  const phaseBlock = (data.phases || []).length
+    ? `<div class="phase-list">${phases}</div><div class="spacer"></div>`
+    : '';
 
   return `
     <div class="proposal-doc">
@@ -46,17 +48,8 @@ function renderProposal(data) {
         <span class="section-label">Understanding</span>
         <h2>What You Need</h2>
         <p class="lead">${escapeHtml(data.understandingLead)}</p>
-        <div class="summary-box">
-          <p><strong>Project scope:</strong> ${escapeHtml(data.projectTitle)}</p>
-        </div>
-        ${solution.summary ? `
-        <div class="solution-box">
-          <span class="section-label">Proposed Solution</span>
-          <h3>${escapeHtml(solution.title || 'Recommended Approach')}</h3>
-          <p>${escapeHtml(solution.summary)}</p>
-        </div>` : ''}
         <span class="section-label">Requirements</span>
-        <h2>How Each Point Is Addressed</h2>
+        <h2>How I'll Address Each Point</h2>
         ${reqs}
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
       </div>
@@ -69,8 +62,7 @@ function renderProposal(data) {
         <span class="section-label">How I'll Build It</span>
         <h2>Technical Approach</h2>
         <p class="lead">${escapeHtml(data.strategyOverview)}</p>
-        <div class="phase-list">${phases}</div>
-        <div class="spacer"></div>
+        ${phaseBlock}
         <span class="section-label">Stack</span>
         <div class="tech-row">${techPills}</div>
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>

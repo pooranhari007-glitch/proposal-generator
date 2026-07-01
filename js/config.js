@@ -11,46 +11,43 @@ const DEFAULT_PROFILE = {
 const DEFAULT_PROMPTS = {
   system: `You are a senior independent software developer drafting a client proposal.
 Output ONLY valid JSON. No markdown, no code fences, no emojis.
-Tone: first person (I/you), direct and personal — as if speaking one-to-one with the client on a call. Confident, clear, not corporate or agency-speak.
+Tone: first person (I/you), direct and concise — one-to-one with the client. Never repeat the same point across sections.
 Never include email. Never mention pricing unless the job post explicitly asks.
 Reference specific details from the job post — never write generic filler.
-The developer works solo (brother as backup), full-stack, Upwork freelancer.`,
-  user: `Analyze this job post deeply. Extract the client's real goals, pain points, and technical needs. Generate a tailored proposal as JSON.
+The developer works solo, full-stack, Upwork freelancer.`,
+  user: `Analyze this job post. Generate a concise, non-repetitive proposal as JSON.
 
 JOB POST:
 {{JOB_POST}}
 
 Return this exact JSON structure:
 {
-  "projectTitle": "clear project name, max 8 words, derived from the job",
-  "coverHeadline": "elegant headline with one <span>highlighted</span> phrase in HTML",
-  "coverSubtitle": "2 sentences: what you understand they need + why you're the right fit",
-  "tags": ["5-6 relevant technologies or domains from the job"],
-  "understandingLead": "paragraph proving you read and understood their specific situation",
-  "solution": {
-    "title": "name of your proposed solution",
-    "summary": "2-3 sentences: concrete technical approach solving their specific problem"
-  },
+  "projectTitle": "clear project name, max 8 words",
+  "coverHeadline": "headline with one <span>highlighted</span> phrase in HTML",
+  "coverSubtitle": "one sentence — the client's core need only",
+  "tags": ["3-4 key technologies"],
+  "understandingLead": "1-2 sentences max — what they need, no filler",
   "requirements": [
-    { "requirement": "exact requirement from job", "response": "specific how-you-will-solve-it, mention tech where relevant" }
+    { "requirement": "from job post", "response": "one short sentence — how you'll solve it" }
   ],
-  "strategyOverview": "2-3 sentences in first person (I/you): how you will personally build this for the client — conversational, direct, one-to-one",
+  "strategyOverview": "one sentence — your build approach, don't repeat stack or requirements",
   "phases": [
-    { "title": "phase name", "description": "first-person description speaking directly to the client — what you will do and what they get" }
+    { "title": "phase name", "description": "one short sentence" }
   ],
-  "techStack": ["technologies chosen for this specific project and why"],
-  "deliverables": ["5-6 concrete deliverables"],
+  "techStack": ["3-5 technologies"],
+  "deliverables": ["3-4 concrete items only"],
   "timeline": [
-    { "phase": "name", "duration": "e.g. Week 1-2", "output": "deliverable" }
+    { "phase": "name", "duration": "e.g. Week 1-2", "output": "short deliverable" }
   ],
-  "closingNote": "1 professional sentence, personalized to the job"
+  "closingNote": "one sentence"
 }
 
 Rules:
-- Extract at least 5 requirements directly from the job post
-- Every response must reference their actual needs, not generic templates
-- solution.summary must describe a real technical approach
-- strategyOverview and phase descriptions must use I/you and sound like a direct message to the client`
+- Max 4 requirements, each response one sentence
+- Max 3 phases, one sentence each
+- Max 4 deliverables
+- Never repeat goals, stack, or approach across sections — each field adds NEW information only
+- strategyOverview must not list technologies (they go in techStack)`
 };
 
 const TECH_KEYWORDS = {

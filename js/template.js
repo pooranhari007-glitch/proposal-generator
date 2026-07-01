@@ -5,9 +5,8 @@ function generateFromTemplate(parsed, profile) {
   } = parsed;
 
   const stack = techStack.length ? techStack : inferStackFromType(projectType);
-  const tags = [...new Set([...stack.slice(0, 5), capitalize(projectType.split(' ')[0])])].slice(0, 6);
 
-  const reqs = (requirements.length ? requirements : defaultRequirements(projectType)).slice(0, 6);
+  const reqs = (requirements.length ? requirements : defaultRequirements(projectType)).slice(0, 4);
 
   const requirementItems = reqs.map((req, i) => ({
     requirement: req,
@@ -16,24 +15,22 @@ function generateFromTemplate(parsed, profile) {
 
   const phases = buildPhases(projectType, stack, parsed);
   const timelineRows = parsed.includeTimeline ? buildTimeline(phases, timeline) : [];
-  const solution = buildSolution(title, projectType, stack, goals, painPoints);
   const headline = buildHeadline(title);
 
   return {
     projectTitle: title,
     coverHeadline: headline,
-    coverSubtitle: buildCoverSubtitle(projectType, stack, goals),
-    tags,
-    understandingLead: buildUnderstanding(projectType, goals, painPoints, title),
-    solution,
+    coverSubtitle: buildCoverSubtitle(projectType, goals),
+    tags: stack.slice(0, 4),
+    understandingLead: buildUnderstanding(goals, painPoints, title),
     requirements: requirementItems,
-    strategyOverview: buildStrategy(projectType, stack, goals),
-    phases,
-    techStack: stack,
+    strategyOverview: buildStrategy(projectType, goals),
+    phases: parsed.includeTimeline ? [] : phases,
+    techStack: stack.slice(0, 6),
     deliverables: buildDeliverables(projectType, stack, parsed),
     timeline: timelineRows,
     includeTimeline: parsed.includeTimeline,
-    closingNote: buildClosing(projectType, timeline),
+    closingNote: buildClosing(timeline),
     profile
   };
 }
@@ -59,10 +56,8 @@ function inferStackFromType(type) {
 
 function defaultRequirements(type) {
   return [
-    `Production-ready ${type} aligned to the stated scope`,
-    'Clean architecture with documented setup and handover',
-    'Incremental delivery with reviewable milestones',
-    'Full source code ownership transferred to you'
+    `Production-ready ${type} aligned to your scope`,
+    'Clean handover with docs and full source ownership'
   ];
 }
 
@@ -71,55 +66,40 @@ function buildHeadline(title) {
   return `A focused plan for <span>${escapeHtml(short)}</span>`;
 }
 
-function buildCoverSubtitle(projectType, stack, goals) {
-  const goalRef = goals[0] ? ` — aimed at ${truncate(goals[0], 80)}` : '';
-  return `Purpose-built ${projectType} using ${stack.slice(0, 3).join(', ')}${goalRef}. Direct developer, milestone delivery, code you own.`;
+function buildCoverSubtitle(projectType, goals) {
+  if (goals[0]) return truncate(goals[0], 100);
+  return `A clear plan for your ${projectType} — direct with me, no agency layers.`;
 }
 
-function buildUnderstanding(projectType, goals, painPoints, title) {
-  let lead = `You are looking for a dependable partner to deliver ${title.toLowerCase()}. `;
-  if (goals[0]) lead += `The core objective is ${truncate(goals[0].toLowerCase(), 120)}. `;
-  if (painPoints[0]) lead += `I understand the friction: ${truncate(painPoints[0].toLowerCase(), 100)}. `;
-  lead += `Below is how I would address each requirement with a clear, buildable solution — not generic agency language.`;
-  return lead;
+function buildUnderstanding(goals, painPoints, title) {
+  if (goals[0] && painPoints[0]) {
+    return `You need ${truncate(title.toLowerCase(), 60)} — specifically ${truncate(goals[0].toLowerCase(), 80)}. ${truncate(painPoints[0], 70)}.`;
+  }
+  if (goals[0]) return `You need ${truncate(title.toLowerCase(), 60)} focused on ${truncate(goals[0].toLowerCase(), 100)}.`;
+  return `Here's how I'd handle ${truncate(title.toLowerCase(), 80)} — point by point below.`;
 }
 
-function buildSolution(title, projectType, stack, goals, painPoints) {
-  const goal = goals[0] ? truncate(goals[0], 100) : `a reliable ${projectType}`;
-  const pain = painPoints[0] ? ` This directly addresses ${truncate(painPoints[0].toLowerCase(), 80)}.` : '';
-  return {
-    title: `Recommended approach for ${truncate(title, 50)}`,
-    summary: `I will deliver ${goal} as a ${projectType} built on ${stack.slice(0, 3).join(', ')} — modular, testable, and deployed in stages so you validate each layer before moving forward.${pain}`
-  };
-}
-
-function buildStrategy(projectType, stack, goals) {
-  const stackList = stack.slice(0, 3).join(', ');
-  const goalLine = goals[0]
-    ? ` Everything I build will point at your goal: ${truncate(goals[0].toLowerCase(), 90)}.`
-    : '';
-  return `Here's how I'd approach your ${projectType}: I'll keep the frontend, backend, and data layer cleanly separated using ${stackList}, so the system stays maintainable as your needs grow.${goalLine} You'll get working builds to review at each step — I'll walk you through what I did and why, one-to-one.`;
+function buildStrategy(projectType, goals) {
+  if (goals[0]) {
+    return `I'll build this as a ${projectType} focused on ${truncate(goals[0].toLowerCase(), 80)} — working increments you review before we move on.`;
+  }
+  return `I'll build this in working increments you review before we move on — no surprises at the end.`;
 }
 
 function buildPhases(projectType, stack, parsed) {
   const tl = parsed.timeline;
-  const stackPair = stack.slice(0, 2).join(' and ');
   return [
     {
-      title: 'Discovery & Scope',
-      description: `I'll start by confirming your requirements with you, mapping the key user flows, and finalizing the ${stackPair} setup.${tl ? ` I'll align to your ${tl} timeline from day one.` : ''} We agree on clear acceptance criteria before I write code — so we're on the same page.`
+      title: 'Scope & Setup',
+      description: `Align on requirements and ${stack.slice(0, 2).join(' + ')}.${tl ? ` Target: ${tl}.` : ''}`
     },
     {
-      title: 'Core Build',
-      description: `I'll build the main ${projectType} features and share staging links with you after each sprint. You tell me what to adjust — I iterate until it matches what you had in mind.`
+      title: 'Build & Review',
+      description: `Core ${projectType} features on staging — you review, I adjust.`
     },
     {
-      title: 'Integration & Hardening',
-      description: `I'll wire up third-party services, handle edge cases, and run security and cross-device checks. I'll flag anything that needs your input before we go live.`
-    },
-    {
-      title: 'Launch & Transfer',
-      description: `I'll deploy to production, hand over full source code and docs, and walk you through everything so you own it completely — not just receive files.`
+      title: 'Launch & Handover',
+      description: 'Deploy, docs, and full code transfer to you.'
     }
   ];
 }
@@ -131,43 +111,36 @@ function templateResponse(req, stack, projectType, parsed, index) {
 
   const rules = [
     [/stripe|payment|billing|checkout|subscription/, () =>
-      `Implement ${/stripe/i.test(req) ? 'Stripe' : 'payment'} flows with webhook verification, idempotent handlers, and test-mode validation before production — including failed payment and refund edge cases.`],
+      `${/stripe/i.test(req) ? 'Stripe' : 'Payment'} flows with webhooks tested before go-live.`],
     [/api|integrat|webhook|third.party|connect/, () =>
-      `Design RESTful endpoints with typed contracts, retry logic, and structured logging. Integration tested end-to-end with ${secondary} before handover.`],
+      `REST endpoints with typed contracts and end-to-end integration tests.`],
     [/auth|login|user|signup|register|oauth/, () =>
-      `Secure authentication with session/JWT management, role-based access, and password reset flows — following OWASP basics, not shortcuts.`],
+      `Secure auth with roles and password reset — OWASP basics covered.`],
     [/ui|ux|design|responsive|frontend|react|vue|angular|mobile/, () =>
-      `Build a refined, mobile-first interface in ${primary} — component-driven, accessible, and performance-tested on real devices.`],
+      `Mobile-first UI in ${primary} — accessible and fast on real devices.`],
     [/database|data|sql|mongo|postgres|schema|migration/, () =>
-      `Model data with normalized schemas, migration scripts, and indexing strategy in ${/postgres/i.test(req) ? 'PostgreSQL' : secondary} — with backup and recovery documented.`],
+      `Clean schema, migrations, and indexes in ${/postgres/i.test(req) ? 'PostgreSQL' : secondary}.`],
     [/deploy|host|aws|docker|ci|devops|server|infrastructure/, () =>
-      `Set up staging + production environments with CI pipeline, environment secrets, and a runbook so you are never locked to me for hosting.`],
+      `Staging + production with CI — you keep full control of hosting.`],
     [/ai|ml|chatbot|openai|gpt|llm|automation|scraper|bot/, () =>
-      `Deliver practical automation: defined inputs/outputs, error handling, rate limits, and cost controls — production-ready, not a demo that breaks under load.`],
+      `Reliable automation with error handling, rate limits, and cost controls.`],
     [/test|qa|quality|bug/, () =>
-      `Unit tests on critical paths, integration tests for API flows, and a manual QA checklist signed off at each milestone.`],
+      `Tests on critical paths plus a QA sign-off each milestone.`],
     [/seo|performance|speed|optim/, () =>
-      `Core Web Vitals optimization, semantic markup, and measurable performance benchmarks before launch.`],
+      `Performance benchmarks and Core Web Vitals before launch.`],
     [/admin|dashboard|portal|crm|report/, () =>
-      `Admin interface with clear data views, filtering, and export — built for daily use, not just a static mockup.`],
+      `Admin views with filtering and export — built for daily use.`],
     [/migrat|legacy|refactor|rewrite/, () =>
-      `Phased migration plan: audit current system, map data flows, migrate in slices with rollback strategy at each step.`],
+      `Phased migration with rollback at each step.`],
     [/document|readme|handover|training/, () =>
-      `Technical documentation, setup guide, and a walkthrough session so your team can maintain the system independently.`]
+      `Setup docs and a walkthrough so your team can maintain it.`]
   ];
 
   for (const [pattern, fn] of rules) {
     if (pattern.test(lower)) return fn();
   }
 
-  const contextual = [
-    `Scope this as Milestone ${index + 1} with defined acceptance criteria and a reviewable demo on the ${projectType}.`,
-    `Implement in ${primary} with clean module boundaries — you get repo access from day one and progress updates every 2–3 days.`,
-    `Map directly to your ${projectType} roadmap: delivered, tested, and documented before moving to the next priority.`,
-    `Address this with ${primary} + ${secondary}, aligned to your stated timeline and reviewed with you before sign-off.`
-  ];
-
-  return contextual[index % contextual.length];
+  return `I'll handle this in ${primary} — scoped, tested, and reviewed with you before sign-off.`;
 }
 
 function buildTimeline(phases, jobTimeline) {
@@ -178,27 +151,25 @@ function buildTimeline(phases, jobTimeline) {
   return phases.map((p, i) => ({
     phase: p.title,
     duration: `Week ${i * perPhase + 1}–${(i + 1) * perPhase}`,
-    output: p.description.split('.')[0]
+    output: p.description
   }));
 }
 
 function buildDeliverables(projectType, stack, parsed) {
   const items = [
-    `Production-ready ${projectType}`,
-    `Full source code (${stack.slice(0, 2).join(', ')}) in your repository`,
-    'Architecture overview and setup documentation',
-    'Deployed staging and production environments'
+    `Working ${projectType} in your repo`,
+    'Staging + production deployment'
   ];
-  if (/api|backend/.test(projectType)) items.push('API documentation with example requests');
-  if (/mobile/.test(projectType)) items.push('Test build for iOS and Android');
-  if (/ai|automation/.test(projectType)) items.push('Automation runbook with monitoring notes');
-  items.push('30-day post-launch defect support');
-  return items.slice(0, 6);
+  if (/api|backend/.test(projectType)) items.push('API docs with examples');
+  else if (/mobile/.test(projectType)) items.push('Test builds for iOS/Android');
+  else items.push(`Source in ${stack[0] || 'your stack'}`);
+  items.push('30-day post-launch support');
+  return items.slice(0, 4);
 }
 
-function buildClosing(projectType, timeline) {
-  const tl = timeline ? ` I can align to your ${timeline} timeline.` : '';
-  return `Ready to begin with a brief scope call within the first week.${tl} Message me on Upwork to proceed.`;
+function buildClosing(timeline) {
+  const tl = timeline ? ` Happy to align to ${timeline}.` : '';
+  return `Message me on Upwork to get started.${tl}`;
 }
 
 function truncate(s, n) {
