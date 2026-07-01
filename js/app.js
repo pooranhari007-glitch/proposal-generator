@@ -131,7 +131,7 @@ function updatePreviewScale() {
   const width = els.previewFrame.parentElement?.clientWidth || 0;
   const scale = Math.max(0.25, Math.min(1, (width - 64) / 794));
   els.previewFrame.style.transform = `scale(${scale})`;
-  els.previewFrame.style.marginBottom = `${-(297 * 1 * (1 - scale))}mm`;
+  els.previewFrame.style.marginBottom = `${-(297 * 3 * (1 - scale))}mm`;
 }
 
 function showPreview(proposal) {

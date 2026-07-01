@@ -132,11 +132,23 @@
   color: #475569;
 }
 
-.proposal-doc .brief-cta {
-  margin-top: 24px;
+.proposal-doc .brief-cta.inline-cta {
+  margin-top: 20px;
   padding-top: 16px;
   border-top: 2px solid #e2e8f0;
-  text-align: center;
+  text-align: left;
+}
+
+.proposal-doc .brief-cta.inline-cta p {
+  font-size: 0.95rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+.proposal-doc .brief-cta.inline-cta strong { color: #1d4ed8; }
+
+.proposal-doc .section-block {
+  margin-bottom: 20px;
 }
 
 .proposal-doc .brief-cta p {
@@ -159,8 +171,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: auto;
-  padding: 32px 40px 28px;
+  min-height: 240mm;
+  padding: 40px 48px 32px;
 }
 
 .proposal-doc .cover-top { display: flex; justify-content: space-between; align-items: flex-start; }

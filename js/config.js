@@ -11,30 +11,36 @@ const DEFAULT_PROFILE = {
 const DEFAULT_PROMPTS = {
   system: `You are a senior independent software developer drafting a client proposal.
 Output ONLY valid JSON. No markdown, no code fences, no emojis.
-Tone: first person (I/you), direct and concise — one-to-one with the client. Never repeat the same point across sections.
-Never include email. Never mention pricing unless the job post explicitly asks.
-Reference specific details from the job post — never write generic filler.
-The developer works solo, full-stack, Upwork freelancer.`,
-  user: `Analyze this job post. Generate a concise, non-repetitive proposal as JSON.
+Tone: first person (I/you), direct and thorough — speak one-to-one with the client. Address every job post detail deeply.
+Never include email address in body. Never mention pricing unless the job post asks.
+Reference specific details from the job post — never generic filler.`,
+  user: `Analyze this job post deeply. Generate a detailed proposal as JSON.
 
 JOB POST:
 {{JOB_POST}}
 
 Return this exact JSON structure:
 {
-  "projectTitle": "short project name",
-  "task": ["2-3 bullet points — what the client needs, one line each"],
-  "solution": "2-3 sentences — stack, how you'll solve each task, what they receive at the end",
+  "projectTitle": "clear project name",
+  "coverHeadline": "Proposal for <span>highlighted title</span>",
+  "tags": ["4-6 technologies from the job"],
+  "task": ["each requirement from job — one line each, up to 6"],
+  "solutionOverview": "2-3 sentences: what they need and your overall approach with stack",
+  "solutionItems": [
+    { "task": "requirement from job", "response": "2-3 sentences: exactly how you will solve this — mention tech" }
+  ],
+  "deliverables": ["4-5 concrete deliverables"],
   "timeline": [
-    { "title": "phase", "duration": "Wk 1-2", "output": "3-5 words" }
+    { "title": "phase", "duration": "Week 1-2", "output": "deliverable" }
   ]
 }
 
 Rules:
-- task: max 3 items, each under 15 words
-- solution: 2-3 sentences, max 80 words — mention stack, approach per task, and handover
-- timeline: only if job mentions deadline — max 3 rows
-- No other fields`
+- Extract up to 6 tasks directly from the job post
+- Each solutionItems.response must be 2-3 detailed sentences, unique per task
+- solutionOverview sets context; per-task detail goes in solutionItems
+- deliverables: what they receive at the end
+- timeline only if job mentions a deadline`
 };
 
 const TECH_KEYWORDS = {

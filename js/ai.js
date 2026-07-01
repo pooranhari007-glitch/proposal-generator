@@ -43,17 +43,28 @@ async function generateWithAI(jobPost, settings, includeTimeline = false) {
 }
 
 function normalizeProposal(data, profile, includeTimeline = false) {
-  const task = Array.isArray(data.task)
-    ? data.task.slice(0, 3)
+  const items = Array.isArray(data.solutionItems)
+    ? data.solutionItems.slice(0, 6)
     : Array.isArray(data.requirements)
-      ? data.requirements.map(r => r.requirement || r).slice(0, 3)
+      ? data.requirements.map((r) => ({
+          task: r.requirement || r.task || '',
+          response: r.response || ''
+        })).slice(0, 6)
       : [];
+
+  const task = Array.isArray(data.task)
+    ? data.task.slice(0, 6)
+    : items.map((i) => i.task);
 
   return {
     projectTitle: data.projectTitle || 'Software Development Proposal',
+    coverHeadline: data.coverHeadline || `Proposal for <span>${data.projectTitle || 'Your Project'}</span>`,
+    tags: Array.isArray(data.tags) ? data.tags.slice(0, 6) : (Array.isArray(data.techStack) ? data.techStack.slice(0, 6) : []),
     task,
-    solution: data.solution || data.strategyOverview || '',
-    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 3) : [],
+    solutionOverview: data.solutionOverview || data.solution || '',
+    solutionItems: items.length ? items : task.map((t) => ({ task: t, response: '' })),
+    deliverables: Array.isArray(data.deliverables) ? data.deliverables.slice(0, 5) : [],
+    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 4) : [],
     includeTimeline,
     profile
   };
