@@ -15,7 +15,7 @@ function generateFromTemplate(parsed, profile) {
   }));
 
   const phases = buildPhases(projectType, stack, parsed);
-  const timelineRows = buildTimeline(phases, timeline);
+  const timelineRows = parsed.includeTimeline ? buildTimeline(phases, timeline) : [];
   const solution = buildSolution(title, projectType, stack, goals, painPoints);
   const headline = buildHeadline(title);
 
@@ -31,8 +31,8 @@ function generateFromTemplate(parsed, profile) {
     phases,
     techStack: stack,
     deliverables: buildDeliverables(projectType, stack, parsed),
-    whyMePoints: buildWhyMe(stack, skills, projectType, parsed),
     timeline: timelineRows,
+    includeTimeline: parsed.includeTimeline,
     closingNote: buildClosing(projectType, timeline),
     demoPlan: buildDemoPlan(projectType, stack, title, reqs),
     profile
@@ -191,26 +191,6 @@ function buildDeliverables(projectType, stack, parsed) {
   if (/ai|automation/.test(projectType)) items.push('Automation runbook with monitoring notes');
   items.push('30-day post-launch defect support');
   return items.slice(0, 6);
-}
-
-function buildWhyMe(stack, skills, projectType, parsed) {
-  const points = [
-    'You work directly with the developer who writes the code — no account manager, no hidden team',
-    '56+ public repositories: full-stack apps, AI integrations, Shopify, and client production work',
-    `Active production experience with ${stack.slice(0, 3).join(', ')}`
-  ];
-
-  const matched = skills.filter(s =>
-    stack.some(t => t.toLowerCase().includes(s.toLowerCase().slice(0, 4)))
-  );
-
-  if (matched.length) {
-    points.push(`Your stack requirements (${matched.slice(0, 3).join(', ')}) align with my current projects`);
-  } else {
-    points.push(`Early working demo on your ${projectType} — validate direction before final milestone`);
-  }
-
-  return points.slice(0, 4);
 }
 
 function buildClosing(projectType, timeline) {

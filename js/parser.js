@@ -1,16 +1,17 @@
 function parseJobPost(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  const lower = text.toLowerCase();
+  const { cleaned, includeTimeline } = extractProposalOptions(text);
+  const lines = cleaned.split('\n').map(l => l.trim()).filter(Boolean);
+  const lower = cleaned.toLowerCase();
 
-  const title = extractTitle(lines, text);
-  const requirements = extractRequirements(text);
+  const title = extractTitle(lines, cleaned);
+  const requirements = extractRequirements(cleaned);
   const techStack = detectTech(lower);
   const projectType = detectProjectType(lower);
-  const skills = extractSkills(text);
-  const goals = extractGoals(text, lower);
-  const painPoints = extractPainPoints(text, lower);
-  const timeline = extractTimeline(text);
-  const constraints = extractConstraints(text, lower);
+  const skills = extractSkills(cleaned);
+  const goals = extractGoals(cleaned, lower);
+  const painPoints = extractPainPoints(cleaned, lower);
+  const timeline = extractTimeline(cleaned);
+  const constraints = extractConstraints(cleaned, lower);
 
   return {
     title,
@@ -22,8 +23,24 @@ function parseJobPost(text) {
     painPoints,
     timeline,
     constraints,
-    raw: text
+    includeTimeline,
+    raw: cleaned
   };
+}
+
+function extractProposalOptions(text) {
+  const includeTimeline = /\b(?:include|add|with|show)\s+timeline\b/i.test(text)
+    || /^\s*\[timeline\]\s*$/im.test(text)
+    || /^\s*\+timeline\s*$/im.test(text);
+
+  const cleaned = text
+    .replace(/^\s*(?:include|add|with|show)\s+timeline\s*$/gim, '')
+    .replace(/^\s*\[timeline\]\s*$/gim, '')
+    .replace(/^\s*\+timeline\s*$/gim, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  return { cleaned, includeTimeline };
 }
 
 function extractTitle(lines, text) {

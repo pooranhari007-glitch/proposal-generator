@@ -6,7 +6,6 @@ function renderProposal(data) {
   const reqs = (data.requirements || []).map((r, i) => reqBlock(r.requirement, r.response, i + 1)).join('');
   const phases = (data.phases || []).map((ph, i) => phaseRow(i + 1, ph.title, ph.description)).join('');
   const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
-  const whyMe = (data.whyMePoints || []).map(w => `<div class="why-item"><p>${escapeHtml(w)}</p></div>`).join('');
   const timelineRows = (data.timeline || []).map(t => `
     <tr>
       <td><strong>${escapeHtml(t.phase)}</strong></td>
@@ -87,6 +86,7 @@ function renderProposal(data) {
         <span class="section-label">Deliverables</span>
         <h2>What You Receive</h2>
         <ul class="clean-list">${deliverables}</ul>
+        ${data.includeTimeline && timelineRows ? `
         <div class="spacer"></div>
         <span class="section-label">Timeline</span>
         <h2>Milestones</h2>
@@ -95,11 +95,7 @@ function renderProposal(data) {
             <tr><th>Phase</th><th>Duration</th><th>Output</th></tr>
           </thead>
           <tbody>${timelineRows}</tbody>
-        </table>
-        <div class="spacer"></div>
-        <span class="section-label">Fit</span>
-        <h2>Why Work With Me</h2>
-        <div class="why-grid">${whyMe}</div>
+        </table>` : ''}
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
       </div>
 

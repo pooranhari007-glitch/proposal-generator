@@ -1,4 +1,4 @@
-async function generateWithAI(jobPost, settings) {
+async function generateWithAI(jobPost, settings, includeTimeline = false) {
   const { apiKey, prompts, model, profile } = settings;
   if (!apiKey) throw new Error('Add your OpenAI API key in Settings to use AI mode.');
 
@@ -39,10 +39,10 @@ async function generateWithAI(jobPost, settings) {
     parsed = JSON.parse(match[0]);
   }
 
-  return normalizeProposal(parsed, profile);
+  return normalizeProposal(parsed, profile, includeTimeline);
 }
 
-function normalizeProposal(data, profile) {
+function normalizeProposal(data, profile, includeTimeline = false) {
   return {
     projectTitle: data.projectTitle || 'Software Development Proposal',
     coverHeadline: data.coverHeadline || 'Your Project — <span>Built Right</span>',
@@ -55,8 +55,8 @@ function normalizeProposal(data, profile) {
     phases: Array.isArray(data.phases) ? data.phases.slice(0, 5) : [],
     techStack: Array.isArray(data.techStack) ? data.techStack : [],
     deliverables: Array.isArray(data.deliverables) ? data.deliverables : [],
-    whyMePoints: Array.isArray(data.whyMePoints) ? data.whyMePoints.slice(0, 5) : [],
-    timeline: Array.isArray(data.timeline) ? data.timeline.slice(0, 6) : [],
+    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 6) : [],
+    includeTimeline,
     closingNote: data.closingNote || '',
     demoPlan: data.demoPlan || null,
     profile
