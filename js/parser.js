@@ -45,27 +45,52 @@ function extractProposalOptions(text) {
 
 function extractTitle(lines, text) {
   const skip = /^(about|description|overview|summary|requirements|skills|budget|deliverables)/i;
+  const lower = text.toLowerCase();
 
   const patterns = [
-    /(?:project|job|title|position|role)[:\s]+(.{8,90})/i,
-    /(?:looking for|need|seeking|hiring|want)\s+(?:an?\s+)?(.{8,90}?)(?:\.|,|$)/i,
-    /(?:build|develop|create)\s+(?:a|an)\s+(.{8,80}?)(?:\.|,|$)/i
+    /(?:project|job|title)[:\s]+(.{8,70})/i,
+    /(?:looking for|seeking|hiring)\s+(?:an?\s+)?(.{8,70}?)(?:\s+to\s+(?:build|develop|create)|\.|,|$)/i,
+    /(?:build|develop|create)\s+(?:a|an)\s+(.{8,70}?)(?:\.|,|$)/i,
+    /(?:need)\s+(?:a|an)\s+(.{8,70}?)(?:\.|,|$)/i
   ];
 
   for (const p of patterns) {
     const m = text.match(p);
     if (m) {
       const t = cleanTitle(m[1]);
-      if (t.length > 8 && !skip.test(t)) return t;
+      if (isGoodTitle(t)) return t;
     }
   }
 
   for (const line of lines.slice(0, 5)) {
     if (line.length > 12 && line.length < 90 && !skip.test(line) && !/^[-•*\d]/.test(line)) {
-      return cleanTitle(line);
+      const t = cleanTitle(line);
+      if (isGoodTitle(t)) return t;
     }
   }
 
+  return inferTitleFromText(lower);
+}
+
+function isGoodTitle(t) {
+  if (!t || t.length < 8 || t.length > 70) return false;
+  if (/^(requires|required|must|should|need to|looking|seeking|attention|ability|quality|super|ie)\b/i.test(t)) return false;
+  if (/^(the|a|an|we|i|you|this|that)\s/i.test(t)) return false;
+  if (/using ai tools|turnaround|overnight/i.test(t)) return false;
+  return true;
+}
+
+function inferTitleFromText(lower) {
+  if (/django/.test(lower) && /api/.test(lower)) return 'Python Django API';
+  if (/django|python/.test(lower)) return 'Python Application';
+  if (/react native|flutter/.test(lower)) return 'Mobile App Development';
+  if (/react|vue|angular|frontend/.test(lower)) return 'Frontend Application';
+  if (/api|backend|microservice/.test(lower)) return 'Backend API Development';
+  if (/automation|scraper|bot/.test(lower)) return 'Automation Solution';
+  if (/ai|openai|gpt|llm|machine learning/.test(lower)) return 'AI-Powered Application';
+  if (/e-?commerce|shopify|stripe/.test(lower)) return 'E-Commerce Platform';
+  if (/wordpress|cms/.test(lower)) return 'CMS / Website Build';
+  if (/saas/.test(lower)) return 'SaaS Application';
   return 'Custom Software Project';
 }
 

@@ -33,8 +33,9 @@ function filterRequirements(requirements, title, projectType) {
 }
 
 function buildHeadline(title) {
-  const short = title.length > 48 ? title.slice(0, 46) + '…' : title;
-  return `Proposal for <span>${escapeHtml(short)}</span>`;
+  if (!isGoodTitle(title)) title = 'Your Project';
+  const short = title.length > 42 ? title.slice(0, 40) + '…' : title;
+  return `<span>${escapeHtml(short)}</span>`;
 }
 
 function buildSolution(reqs, stack, projectType, timeline, includeTimeline) {

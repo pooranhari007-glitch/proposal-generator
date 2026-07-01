@@ -115,7 +115,12 @@ function storageSet(key, value) {
 }
 
 function loadSettings() {
-  const profile = { ...DEFAULT_PROFILE, ...safeParse(storageGet(STORAGE_KEYS.profile)) };
+  const stored = safeParse(storageGet(STORAGE_KEYS.profile));
+  const profile = { ...DEFAULT_PROFILE, ...stored };
+  if (stored.name === 'Rajat' && stored.brand !== 'Veena Dev') {
+    profile.name = DEFAULT_PROFILE.name;
+    profile.brand = DEFAULT_PROFILE.brand;
+  }
   const prompts = { ...DEFAULT_PROMPTS, ...safeParse(storageGet(STORAGE_KEYS.prompts)) };
   return {
     profile,

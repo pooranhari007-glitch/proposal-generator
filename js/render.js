@@ -29,7 +29,8 @@ function renderProposal(data) {
           <div class="cover-year">${escapeHtml(p.year)}</div>
         </div>
         <div class="cover-main">
-          <h1>${sanitizeHeadline(data.coverHeadline) || 'Your <span>Project</span>'}</h1>
+          <p class="cover-eyebrow">Proposal for</p>
+          <h1>${sanitizeHeadline(data.coverHeadline) || '<span>Your Project</span>'}</h1>
           <div class="cover-tags">${tags}</div>
         </div>
         <div class="cover-bottom">
