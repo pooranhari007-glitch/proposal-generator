@@ -13,7 +13,7 @@
 
 .proposal-doc .page {
   width: 210mm;
-  min-height: 297mm;
+  min-height: auto;
   padding: 0;
   page-break-after: always;
   position: relative;
@@ -30,8 +30,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 297mm;
-  padding: 48px 52px;
+  min-height: auto;
+  padding: 32px 40px 28px;
 }
 
 .proposal-doc .cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -50,19 +50,19 @@
 .proposal-doc .cover-year { font-size: 0.85rem; opacity: 0.7; font-weight: 500; }
 
 .proposal-doc .cover-main {
-  flex: 1;
+  flex: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 40px 0;
+  padding: 20px 0;
 }
 
 .proposal-doc .cover-main h1 {
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   max-width: 540px;
   color: #ffffff;
 }
@@ -92,7 +92,8 @@
 
 .proposal-doc .cover-bottom {
   border-top: 1px solid rgba(255,255,255,0.2);
-  padding-top: 28px;
+  padding-top: 16px;
+  margin-top: 8px;
 }
 
 .proposal-doc .cover-contact strong {
@@ -111,14 +112,14 @@
 }
 
 /* Inner pages */
-.proposal-doc .inner { padding: 44px 52px 40px; min-height: 297mm; }
+.proposal-doc .inner { padding: 28px 40px 24px; min-height: auto; }
 
 .proposal-doc .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
   border-bottom: 2px solid #e2e8f0;
 }
 
@@ -136,15 +137,15 @@
   text-transform: uppercase;
   padding: 6px 14px;
   border-radius: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .proposal-doc h2 {
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
   letter-spacing: -0.02em;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   line-height: 1.2;
 }
 
@@ -187,8 +188,8 @@
 /* Requirements */
 .proposal-doc .service-row {
   display: flex;
-  gap: 16px;
-  padding: 16px 0;
+  gap: 12px;
+  padding: 10px 0;
   border-bottom: 1px solid #f1f5f9;
   align-items: flex-start;
 }
@@ -274,11 +275,11 @@
 
 /* Lists */
 .proposal-doc .clean-list,
-.proposal-doc .req-list { list-style: none; margin: 16px 0; }
+.proposal-doc .req-list { list-style: none; margin: 8px 0 0; }
 
 .proposal-doc .clean-list li,
 .proposal-doc .req-list li {
-  padding: 12px 0 12px 28px;
+  padding: 8px 0 8px 24px;
   border-bottom: 1px solid #f1f5f9;
   position: relative;
   font-size: 0.85rem;
@@ -301,7 +302,7 @@
 .proposal-doc table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin: 10px 0 0;
   font-size: 0.85rem;
 }
 
@@ -309,7 +310,7 @@
   background: #1d4ed8;
   color: #fff;
   text-align: left;
-  padding: 12px 16px;
+  padding: 8px 12px;
   font-weight: 600;
   font-size: 0.8rem;
 }
@@ -318,7 +319,7 @@
 .proposal-doc th:last-child { border-radius: 0 8px 0 0; }
 
 .proposal-doc td {
-  padding: 12px 16px;
+  padding: 8px 12px;
   border-bottom: 1px solid #e2e8f0;
   color: #475569;
   vertical-align: top;
@@ -346,40 +347,49 @@
 .proposal-doc .why-item:nth-child(even) { border-top-color: #2563eb; }
 .proposal-doc .why-item p { margin: 0; font-size: 0.82rem; line-height: 1.5; color: #64748b; }
 
-.proposal-doc .spacer { height: 16px; }
+.proposal-doc .spacer { height: 8px; }
+
+.proposal-doc .section-block {
+  margin-bottom: 18px;
+}
+
+.proposal-doc .section-block:last-child {
+  margin-bottom: 0;
+}
 
 /* CTA page */
 .proposal-doc .cta-page {
   background: linear-gradient(160deg, #f8fafc 0%, #eff6ff 100%);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  min-height: 297mm;
-  padding: 52px;
+  min-height: auto;
+  padding: 32px 40px 28px;
 }
 
 .proposal-doc .cta-box {
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  padding: 48px 40px;
+  border-radius: 16px;
+  padding: 28px 32px;
   max-width: 480px;
-  box-shadow: 0 20px 60px rgba(29, 78, 216, 0.08);
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(29, 78, 216, 0.08);
 }
 
-.proposal-doc .cta-box h2 { margin-bottom: 12px; }
-.proposal-doc .cta-box .lead { margin-bottom: 28px; text-align: center; }
+.proposal-doc .cta-box h2 { margin-bottom: 8px; }
+.proposal-doc .cta-box .lead { margin-bottom: 16px; text-align: center; }
 
 .proposal-doc .cta-line { display: none; }
 
 .proposal-doc .contact-grid {
   display: flex;
   justify-content: center;
-  gap: 32px;
+  gap: 24px;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 12px;
   text-align: center;
 }
 
@@ -397,13 +407,11 @@
 }
 
 .proposal-doc .footer-note {
-  position: absolute;
-  bottom: 32px;
-  left: 52px;
-  right: 52px;
+  position: relative;
+  margin-top: 20px;
   text-align: center;
   font-size: 0.72rem;
   color: #94a3b8;
   border-top: 1px solid #e2e8f0;
-  padding-top: 16px;
+  padding-top: 10px;
 }

@@ -16,6 +16,18 @@ function renderProposal(data) {
     </tr>
   `).join('');
 
+  const timelineBlock = data.includeTimeline && timelineRows ? `
+        <div class="section-block">
+          <span class="section-label">Timeline</span>
+          <h2>Milestones</h2>
+          <table>
+            <thead>
+              <tr><th>Phase</th><th>When</th><th>Output</th></tr>
+            </thead>
+            <tbody>${timelineRows}</tbody>
+          </table>
+        </div>` : '';
+
   return `
     <div class="proposal-doc">
       <div class="page cover">
@@ -39,33 +51,20 @@ function renderProposal(data) {
 
       <div class="page inner">
         <div class="page-header">
-          <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
+          <div class="page-logo">${pageLogo}</div>
           <div class="page-num">02</div>
         </div>
-        <span class="section-label">Scope</span>
-        <h2>What You Asked For — How I'll Do It</h2>
-        ${reqs}
-        <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
-      </div>
-
-      <div class="page inner">
-        <div class="page-header">
-          <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
-          <div class="page-num">03</div>
+        <div class="section-block">
+          <span class="section-label">Scope</span>
+          <h2>What You Asked For — How I'll Do It</h2>
+          ${reqs}
         </div>
-        <span class="section-label">Deliverables</span>
-        <h2>What You Get</h2>
-        <ul class="clean-list">${deliverables}</ul>
-        ${data.includeTimeline && timelineRows ? `
-        <div class="spacer"></div>
-        <span class="section-label">Timeline</span>
-        <h2>Milestones</h2>
-        <table>
-          <thead>
-            <tr><th>Phase</th><th>When</th><th>Output</th></tr>
-          </thead>
-          <tbody>${timelineRows}</tbody>
-        </table>` : ''}
+        <div class="section-block">
+          <span class="section-label">Deliverables</span>
+          <h2>What You Get</h2>
+          <ul class="clean-list">${deliverables}</ul>
+        </div>
+        ${timelineBlock}
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
       </div>
 
@@ -74,7 +73,7 @@ function renderProposal(data) {
           <span class="section-label">Next Step</span>
           <h2>Let's Talk</h2>
           <p class="lead">${escapeHtml(data.closingNote || 'Message me on Upwork to discuss.')}</p>
-          <div class="cta-btn" style="display:inline-block;background:#2563eb;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:0.95rem;margin-bottom:24px;">Message on Upwork</div>
+          <div class="cta-btn" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 28px;border-radius:10px;font-weight:700;font-size:0.9rem;margin-bottom:16px;">Message on Upwork</div>
           <div class="contact-grid">
             <div>
               <div class="label">Developer</div>
@@ -90,7 +89,7 @@ function renderProposal(data) {
             </div>
           </div>
         </div>
-        <div class="footer-note" style="position:relative;bottom:auto;margin-top:56px;">
+        <div class="footer-note" style="margin-top:20px;">
           © ${escapeHtml(p.year)} ${escapeHtml(p.name)}
         </div>
       </div>
