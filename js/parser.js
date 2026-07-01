@@ -106,7 +106,7 @@ function extractRequirements(text) {
     const sentences = text
       .split(/[.!?\n]+/)
       .map(s => cleanReq(s))
-      .filter(s => s.length > 10 && s.length < 120);
+      .filter(s => s.length >= 8 && s.length < 120);
 
     const keywords = /must|need|require|should|build|develop|integrate|implement|deliver|create|deploy|aws|webhook|api|django|python/i;
     for (const s of sentences) {
