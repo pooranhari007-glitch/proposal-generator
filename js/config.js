@@ -1,6 +1,6 @@
 const DEFAULT_PROFILE = {
-  name: 'Rajat',
-  brand: 'Rajat Dev',
+  name: 'Veena',
+  brand: 'Veena',
   title: 'Independent Developer & Consultant',
   upwork: 'upwork.com/freelancers/~01f65823609a7aac5f',
   github: 'github.com/Fullstackdeveloper4545',

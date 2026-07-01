@@ -1,6 +1,9 @@
 function renderProposal(data) {
   const p = data.profile || DEFAULT_PROFILE;
-  const brandParts = (p.brand || 'Rajat Dev').split(' ');
+  const brandParts = (p.brand || 'Veena').split(' ');
+  const pageLogo = brandParts[1]
+    ? `${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1])}</span>`
+    : escapeHtml(p.brand || p.name || 'Veena');
 
   const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
   const reqs = (data.requirements || []).map((r, i) => reqBlock(r.requirement, r.response, i + 1)).join('');

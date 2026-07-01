@@ -48,7 +48,7 @@ function parseArgs(argv) {
 }
 
 function buildCoverNote(proposal) {
-  return `Hi — I put together a short proposal PDF for your project: requirements mapped, technical approach, timeline, and deliverables. Happy to jump on a quick call. — Rajat`;
+  return `Hi — I put together a short proposal PDF for your project: requirements mapped, technical approach, timeline, and deliverables. Happy to jump on a quick call. — Veena`;
 }
 
 async function main() {
