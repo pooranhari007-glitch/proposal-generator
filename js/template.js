@@ -94,8 +94,34 @@ function buildSolution(title, projectType, stack, goals, painPoints) {
 }
 
 function buildStrategy(projectType, stack, goals) {
-  const goalHint = goals[0] ? ` Every technical decision maps back to: ${truncate(goals[0].toLowerCase(), 90)}.` : '';
-  return `The architecture separates UI, business logic, and data — using ${stack.slice(0, 4).join(', ')} for a maintainable ${projectType}.${goalHint} I ship working increments, not slide decks.`;
+  const stackList = stack.slice(0, 3).join(', ');
+  const goalLine = goals[0]
+    ? ` Everything I build will point at your goal: ${truncate(goals[0].toLowerCase(), 90)}.`
+    : '';
+  return `Here's how I'd approach your ${projectType}: I'll keep the frontend, backend, and data layer cleanly separated using ${stackList}, so the system stays maintainable as your needs grow.${goalLine} You'll get working builds to review at each step — I'll walk you through what I did and why, one-to-one.`;
+}
+
+function buildPhases(projectType, stack, parsed) {
+  const tl = parsed.timeline;
+  const stackPair = stack.slice(0, 2).join(' and ');
+  return [
+    {
+      title: 'Discovery & Scope',
+      description: `I'll start by confirming your requirements with you, mapping the key user flows, and finalizing the ${stackPair} setup.${tl ? ` I'll align to your ${tl} timeline from day one.` : ''} We agree on clear acceptance criteria before I write code — so we're on the same page.`
+    },
+    {
+      title: 'Core Build',
+      description: `I'll build the main ${projectType} features and share staging links with you after each sprint. You tell me what to adjust — I iterate until it matches what you had in mind.`
+    },
+    {
+      title: 'Integration & Hardening',
+      description: `I'll wire up third-party services, handle edge cases, and run security and cross-device checks. I'll flag anything that needs your input before we go live.`
+    },
+    {
+      title: 'Launch & Transfer',
+      description: `I'll deploy to production, hand over full source code and docs, and walk you through everything so you own it completely — not just receive files.`
+    }
+  ];
 }
 
 function templateResponse(req, stack, projectType, parsed, index) {
@@ -142,28 +168,6 @@ function templateResponse(req, stack, projectType, parsed, index) {
   ];
 
   return contextual[index % contextual.length];
-}
-
-function buildPhases(projectType, stack, parsed) {
-  const tl = parsed.timeline;
-  return [
-    {
-      title: 'Discovery & Scope',
-      description: `Confirm requirements, map user flows, finalize ${stack.slice(0, 2).join(' + ')} architecture, and agree on milestone acceptance criteria.${tl ? ` Target: ${tl}.` : ''}`
-    },
-    {
-      title: 'Core Build',
-      description: `Develop primary ${projectType} features with staging demos after each sprint. Your feedback shapes the next iteration.`
-    },
-    {
-      title: 'Integration & Hardening',
-      description: 'Wire third-party services, handle edge cases, security review, and cross-browser/device testing.'
-    },
-    {
-      title: 'Launch & Transfer',
-      description: 'Production deployment, documentation, knowledge transfer, and full source code + asset handover to you.'
-    }
-  ];
 }
 
 function buildTimeline(phases, jobTimeline) {

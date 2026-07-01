@@ -66,7 +66,7 @@ function renderProposal(data) {
           <div class="page-logo">${escapeHtml(brandParts[0])} <span>${escapeHtml(brandParts[1] || 'Dev')}</span></div>
           <div class="page-num">03</div>
         </div>
-        <span class="section-label">Strategy</span>
+        <span class="section-label">How I'll Build It</span>
         <h2>Technical Approach</h2>
         <p class="lead">${escapeHtml(data.strategyOverview)}</p>
         <div class="phase-list">${phases}</div>
