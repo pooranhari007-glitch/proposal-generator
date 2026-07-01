@@ -7,25 +7,19 @@ function renderProposal(data) {
 
   const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
   const taskItems = (data.task || []).map(t => `<li>${escapeHtml(t)}</li>`).join('');
-  const solutionRows = (data.solutionItems || []).map((item, i) => solutionRow(item.task, item.response, i + 1)).join('');
-  const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
   const timelineRows = (data.timeline || []).map(t => `
     <tr>
-      <td><strong>${escapeHtml(t.title || t.phase)}</strong></td>
+      <td>${escapeHtml(t.title || t.phase)}</td>
       <td>${escapeHtml(t.duration)}</td>
       <td>${escapeHtml(t.output)}</td>
     </tr>
   `).join('');
 
   const timelineBlock = data.includeTimeline && timelineRows ? `
-        <div class="section-block">
-          <span class="section-label">Timeline</span>
-          <h2>Milestones</h2>
-          <table>
-            <thead><tr><th>Phase</th><th>When</th><th>Output</th></tr></thead>
-            <tbody>${timelineRows}</tbody>
-          </table>
-        </div>` : '';
+        <table class="brief-table">
+          <thead><tr><th>Phase</th><th>When</th><th>Output</th></tr></thead>
+          <tbody>${timelineRows}</tbody>
+        </table>` : '';
 
   return `
     <div class="proposal-doc">
@@ -63,23 +57,7 @@ function renderProposal(data) {
         <div class="section-block">
           <span class="section-label">Solution</span>
           <h2>My Proposal Solution</h2>
-          <p class="lead">${escapeHtml(data.solutionOverview || '')}</p>
-          ${solutionRows}
-        </div>
-
-        <div class="footer-note">${escapeHtml(p.name)} · ${escapeHtml(p.brand || 'Veena Dev')}</div>
-      </div>
-
-      <div class="page inner">
-        <div class="page-header">
-          <div class="page-logo">${pageLogo}</div>
-          <div class="page-num">03</div>
-        </div>
-
-        <div class="section-block">
-          <span class="section-label">Deliverables</span>
-          <h2>What You Receive</h2>
-          <ul class="clean-list">${deliverables}</ul>
+          <p class="lead">${escapeHtml(data.solution)}</p>
         </div>
 
         ${timelineBlock}
@@ -88,19 +66,7 @@ function renderProposal(data) {
           <p><strong>Let's chat further</strong> — message me on Upwork or email.</p>
         </div>
 
-        <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
-      </div>
-    </div>
-  `;
-}
-
-function solutionRow(task, response, num) {
-  return `
-    <div class="service-row">
-      <div class="service-num">${String(num).padStart(2, '0')}</div>
-      <div class="service-content">
-        <h3>${escapeHtml(task)}</h3>
-        <p>${escapeHtml(response)}</p>
+        <div class="footer-note">${escapeHtml(p.name)} · ${escapeHtml(p.brand || 'Veena Dev')}</div>
       </div>
     </div>
   `;

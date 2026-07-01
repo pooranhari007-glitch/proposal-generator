@@ -48,8 +48,7 @@ function parseArgs(argv) {
 }
 
 function buildCoverNote(proposal) {
-  const tasks = (proposal.task || []).slice(0, 2).join('; ');
-  return `I've attached a proposal covering: ${tasks}. My approach is detailed in the PDF. Let's chat further on Upwork or email. — Veena Dev`;
+  return `Attached: Task + my proposal solution for your project. Let's chat further on Upwork or email. — Veena Dev`;
 }
 
 async function main() {

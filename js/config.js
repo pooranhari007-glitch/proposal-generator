@@ -11,35 +11,25 @@ const DEFAULT_PROFILE = {
 const DEFAULT_PROMPTS = {
   system: `You are a senior independent software developer drafting a client proposal.
 Output ONLY valid JSON. No markdown, no code fences, no emojis.
-Tone: first person (I/you), direct and thorough — speak one-to-one with the client. Address every job post detail deeply.
-Never include email address in body. Never mention pricing unless the job post asks.
-Reference specific details from the job post — never generic filler.`,
-  user: `Analyze this job post deeply. Generate a detailed proposal as JSON.
+Tone: first person (I/you), clear and practical. Focus on basics only.`,
+  user: `Analyze this job post. Generate a simple proposal as JSON.
 
 JOB POST:
 {{JOB_POST}}
 
-Return this exact JSON structure:
+Return ONLY:
 {
-  "projectTitle": "clear project name",
-  "coverHeadline": "Proposal for <span>highlighted title</span>",
-  "tags": ["4-6 technologies from the job"],
-  "task": ["each requirement from job — one line each, up to 6"],
-  "solutionOverview": "2-3 sentences: what they need and your overall approach with stack",
-  "solutionItems": [
-    { "task": "requirement from job", "response": "2-3 sentences: exactly how you will solve this — mention tech" }
-  ],
-  "deliverables": ["4-5 concrete deliverables"],
-  "timeline": [
-    { "title": "phase", "duration": "Week 1-2", "output": "deliverable" }
-  ]
+  "projectTitle": "short project name",
+  "coverHeadline": "Proposal for <span>title</span>",
+  "tags": ["3-4 technologies"],
+  "task": ["what client needs — up to 4 bullets from job post"],
+  "solution": "one paragraph: stack + how you solve each task + handover",
+  "timeline": [{ "title": "phase", "duration": "Wk 1-2", "output": "output" }]
 }
 
 Rules:
-- Extract up to 6 tasks directly from the job post
-- Each solutionItems.response must be 2-3 detailed sentences, unique per task
-- solutionOverview sets context; per-task detail goes in solutionItems
-- deliverables: what they receive at the end
+- Basic only: task bullets + one solution paragraph
+- No deliverables, phases, or extra sections
 - timeline only if job mentions a deadline`
 };
 
