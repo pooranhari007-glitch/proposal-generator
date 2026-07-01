@@ -1,19 +1,16 @@
 function generateFromTemplate(parsed, profile) {
-  const { title, requirements, techStack, projectType, timeline } = parsed;
+  const { title, requirements, techStack, projectType } = parsed;
 
   const stack = techStack.length ? techStack : inferStackFromType(projectType);
   const reqs = filterRequirements(requirements, title, projectType).slice(0, 4);
-  const phases = buildPhases(projectType, stack, parsed);
-  const timelineRows = parsed.includeTimeline ? buildTimeline(phases, timeline) : [];
 
   return {
     projectTitle: title,
     coverHeadline: buildHeadline(title),
     tags: stack.slice(0, 4),
     task: reqs.map((r) => truncate(r, 120)),
-    solution: buildSolution(reqs, stack, projectType, timeline, parsed.includeTimeline),
-    timeline: timelineRows,
-    includeTimeline: parsed.includeTimeline,
+    solution: buildSolution(stack, projectType, parsed),
+    deliverables: buildDeliverables(projectType, stack),
     profile
   };
 }
@@ -27,6 +24,7 @@ function filterRequirements(requirements, title, projectType) {
     if (/^looking for|^seeking|^hiring/i.test(req)) return false;
     if (lower === title.toLowerCase()) return false;
     if (titleKey.length > 12 && lower.startsWith(titleKey)) return false;
+    if (/\$|budget|price|rate|hourly|fixed cost/i.test(req)) return false;
     return true;
   });
   return filtered.length ? dedupe(filtered) : defaults;
@@ -38,24 +36,30 @@ function buildHeadline(title) {
   return `<span>${escapeHtml(short)}</span>`;
 }
 
-function buildSolution(reqs, stack, projectType, timeline, includeTimeline) {
+function buildSolution(stack, projectType, parsed) {
   const stackNote = stack.slice(0, 3).join(', ');
-  const points = reqs.map((req, i) => briefResponse(req, stack, i)).join(' ');
-  const tl = includeTimeline && timeline ? ` I can work within ${timeline}.` : '';
-  return `I'll build your ${projectType} using ${stackNote}. ${points} You get the code in your repo, staging to review, and full handover.${tl}`.replace(/\s+/g, ' ').trim();
+  const focus = solutionFocus(parsed.raw || '', stack, projectType);
+  return `I'll build this as a ${projectType} on ${stackNote}. ${focus} You work directly with me — I share staging builds as we go, you review, I adjust. No agency handoffs.`;
 }
 
-function briefResponse(req, stack, index) {
-  const lower = req.toLowerCase();
-  const primary = stack[0] || 'the agreed stack';
-  if (/webhook/i.test(lower)) return 'Webhooks with retries and logging.';
-  if (/aws|deploy|host/i.test(lower)) return 'AWS deploy with staging and production.';
-  if (/api|integrat/i.test(lower)) return 'REST API with tests and docs.';
-  if (/auth|login/i.test(lower)) return 'Secure auth and roles.';
-  if (/django|python/i.test(lower)) return 'Python/Django backend, clean and documented.';
-  if (/database|postgres|mongo|sql/i.test(lower)) return `Data layer in ${stack[1] || primary}.`;
-  if (/ui|frontend|react|mobile/i.test(lower)) return `UI in ${primary}, mobile-first.`;
-  return `Handled in ${primary} with your review at each step.`;
+function solutionFocus(text, stack, projectType) {
+  const lower = text.toLowerCase();
+  if (/webhook|api|integrat/.test(lower)) return 'Clean API layer with tested integrations and documented endpoints.';
+  if (/aws|deploy|cloud|host/.test(lower)) return 'Staging and production setup you control, with CI so deploys stay predictable.';
+  if (/ai|openai|gpt|automation|bot/.test(lower)) return 'Reliable automation with clear inputs/outputs, error handling, and cost-aware design.';
+  if (/mobile|ios|android|react native/.test(lower)) return 'Mobile-first build tested on real devices before you sign off.';
+  if (/ui|frontend|react|vue|dashboard/.test(lower)) return 'Polished interface in ' + (stack[0] || 'your stack') + ', component-based and easy to extend.';
+  if (/database|postgres|mongo|sql/.test(lower)) return 'Solid data model with migrations and a schema your team can maintain.';
+  if (/auth|login|user/.test(lower)) return 'Secure auth and role-based access from day one.';
+  return 'Modular architecture so each piece is testable, reviewable, and yours to keep.';
+}
+
+function buildDeliverables(projectType, stack) {
+  return [
+    `Working ${projectType} — full source in your repository`,
+    `Deployed staging environment (${stack.slice(0, 2).join(', ')})`,
+    'Setup documentation and handover walkthrough'
+  ];
 }
 
 function inferStackFromType(type) {
@@ -74,26 +78,7 @@ function inferStackFromType(type) {
 }
 
 function defaultRequirements(type) {
-  return [`Production-ready ${type}`, 'Source code and docs in your hands'];
-}
-
-function buildPhases(projectType, stack, parsed) {
-  return [
-    { title: 'Scope', duration: 'Week 1', output: 'Requirements agreed' },
-    { title: 'Build', duration: 'Week 2–4', output: `Core ${projectType}` },
-    { title: 'Ship', duration: 'Week 5+', output: 'Deploy + handover' }
-  ];
-}
-
-function buildTimeline(phases, jobTimeline) {
-  const weekMatch = jobTimeline?.match(/(\d+)/);
-  if (!weekMatch) return phases;
-  const total = Math.max(parseInt(weekMatch[1], 10), 3);
-  const chunk = Math.max(1, Math.floor(total / phases.length));
-  return phases.map((p, i) => ({
-    ...p,
-    duration: `Wk ${i * chunk + 1}–${Math.min((i + 1) * chunk, total)}`
-  }));
+  return [`Production-ready ${type}`, 'Full ownership of code and documentation'];
 }
 
 function dedupe(arr) {

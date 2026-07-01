@@ -103,12 +103,10 @@ async function handleGenerate() {
 
   try {
     let proposal;
-    const { cleaned, includeTimeline } = extractProposalOptions(jobPost);
-
     if (settings.mode === 'ai') {
-      proposal = await generateWithAI(cleaned, settings, includeTimeline);
+      proposal = await generateWithAI(cleaned, settings);
     } else {
-      const parsed = parseJobPost(jobPost);
+      const parsed = parseJobPost(cleaned);
       proposal = generateFromTemplate(parsed, settings.profile);
     }
 

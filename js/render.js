@@ -7,19 +7,7 @@ function renderProposal(data) {
 
   const tags = (data.tags || []).map(t => `<span class="cover-tag">${escapeHtml(t)}</span>`).join('');
   const taskItems = (data.task || []).map(t => `<li>${escapeHtml(t)}</li>`).join('');
-  const timelineRows = (data.timeline || []).map(t => `
-    <tr>
-      <td>${escapeHtml(t.title || t.phase)}</td>
-      <td>${escapeHtml(t.duration)}</td>
-      <td>${escapeHtml(t.output)}</td>
-    </tr>
-  `).join('');
-
-  const timelineBlock = data.includeTimeline && timelineRows ? `
-        <table class="brief-table">
-          <thead><tr><th>Phase</th><th>When</th><th>Output</th></tr></thead>
-          <tbody>${timelineRows}</tbody>
-        </table>` : '';
+  const deliverables = (data.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join('');
 
   return `
     <div class="proposal-doc">
@@ -50,21 +38,25 @@ function renderProposal(data) {
         </div>
 
         <div class="section-block">
-          <span class="section-label">Task</span>
-          <h2>What You Need</h2>
+          <span class="section-label">Scope</span>
+          <h2>The Task</h2>
           <ul class="brief-list">${taskItems}</ul>
         </div>
 
         <div class="section-block">
-          <span class="section-label">Solution</span>
-          <h2>My Proposal Solution</h2>
+          <span class="section-label">Approach</span>
+          <h2>How I'll Deliver</h2>
           <p class="lead">${escapeHtml(data.solution)}</p>
         </div>
 
-        ${timelineBlock}
+        <div class="section-block">
+          <span class="section-label">Output</span>
+          <h2>What You Receive</h2>
+          <ul class="clean-list">${deliverables}</ul>
+        </div>
 
         <div class="brief-cta inline-cta">
-          <p><strong>Let's chat further</strong> — message me on Upwork or email.</p>
+          <p><strong>Let's talk</strong> — message me on Upwork or email to discuss details.</p>
         </div>
 
         <div class="footer-note">${escapeHtml(p.name)} · ${escapeHtml(p.brand || 'Veena Dev')}</div>

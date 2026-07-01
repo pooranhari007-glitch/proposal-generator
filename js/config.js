@@ -11,26 +11,27 @@ const DEFAULT_PROFILE = {
 const DEFAULT_PROMPTS = {
   system: `You are a senior independent software developer drafting a client proposal.
 Output ONLY valid JSON. No markdown, no code fences, no emojis.
-Tone: first person (I/you), clear and practical. Focus on basics only.`,
-  user: `Analyze this job post. Generate a simple proposal as JSON.
+Tone: first person (I/you), professional, clear. Never mention price, budget, rates, or timeline.`,
+  user: `Analyze this job post. Generate a client proposal as JSON.
 
 JOB POST:
 {{JOB_POST}}
 
 Return ONLY:
 {
-  "projectTitle": "short project name",
-  "coverHeadline": "Proposal for <span>title</span>",
-  "tags": ["3-4 technologies"],
-  "task": ["what client needs — up to 4 bullets from job post"],
-  "solution": "one paragraph: stack + how you solve each task + handover",
-  "timeline": [{ "title": "phase", "duration": "Wk 1-2", "output": "output" }]
+  "projectTitle": "short clear project name",
+  "coverHeadline": "<span>Project Name</span>",
+  "tags": ["3-4 technologies from job"],
+  "task": ["up to 4 bullets — what the CLIENT needs, their words"],
+  "solution": "one paragraph — YOUR approach and stack only. Do NOT repeat the task bullets.",
+  "deliverables": ["3 tangible outputs — what they receive at the end, not how"]
 }
 
 Rules:
-- Basic only: task bullets + one solution paragraph
-- No deliverables, phases, or extra sections
-- timeline only if job mentions a deadline`
+- task = their requirements only
+- solution = how you build (stack, process, direct communication) — must NOT re-list tasks
+- deliverables = final outputs (code, deploy, docs) — must NOT repeat solution
+- NEVER include pricing, budget, rates, timeline, or deadlines`
 };
 
 const TECH_KEYWORDS = {

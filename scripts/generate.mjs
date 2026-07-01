@@ -48,7 +48,7 @@ function parseArgs(argv) {
 }
 
 function buildCoverNote(proposal) {
-  return `Attached: Task + my proposal solution for your project. Let's chat further on Upwork or email. — Veena Dev`;
+  return `I've attached a short proposal — task, approach, and deliverables. Happy to discuss on Upwork or email. — Veena Dev`;
 }
 
 async function main() {

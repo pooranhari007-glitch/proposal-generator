@@ -1,4 +1,4 @@
-async function generateWithAI(jobPost, settings, includeTimeline = false) {
+async function generateWithAI(jobPost, settings) {
   const { apiKey, prompts, model, profile } = settings;
   if (!apiKey) throw new Error('Add your OpenAI API key in Settings to use AI mode.');
 
@@ -39,18 +39,17 @@ async function generateWithAI(jobPost, settings, includeTimeline = false) {
     parsed = JSON.parse(match[0]);
   }
 
-  return normalizeProposal(parsed, profile, includeTimeline);
+  return normalizeProposal(parsed, profile);
 }
 
-function normalizeProposal(data, profile, includeTimeline = false) {
+function normalizeProposal(data, profile) {
   return {
     projectTitle: data.projectTitle || 'Software Development Proposal',
-    coverHeadline: data.coverHeadline || `Proposal for <span>${data.projectTitle || 'Your Project'}</span>`,
-    tags: Array.isArray(data.tags) ? data.tags.slice(0, 4) : (Array.isArray(data.techStack) ? data.techStack.slice(0, 4) : []),
+    coverHeadline: data.coverHeadline || `<span>${data.projectTitle || 'Your Project'}</span>`,
+    tags: Array.isArray(data.tags) ? data.tags.slice(0, 4) : [],
     task: Array.isArray(data.task) ? data.task.slice(0, 4) : [],
-    solution: data.solution || data.solutionOverview || '',
-    timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 3) : [],
-    includeTimeline,
+    solution: data.solution || '',
+    deliverables: Array.isArray(data.deliverables) ? data.deliverables.slice(0, 4) : [],
     profile
   };
 }
