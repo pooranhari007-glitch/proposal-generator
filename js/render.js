@@ -14,7 +14,6 @@ function renderProposal(data) {
     </tr>
   `).join('');
   const techPills = (data.techStack || []).map(t => `<span class="tech-pill">${escapeHtml(t)}</span>`).join('');
-  const demoBlock = renderDemoPlan(data.demoPlan);
   const solution = data.solution || {};
 
   return `
@@ -74,7 +73,6 @@ function renderProposal(data) {
         <div class="spacer"></div>
         <span class="section-label">Stack</span>
         <div class="tech-row">${techPills}</div>
-        ${demoBlock}
         <div class="footer-note">${escapeHtml(p.name)} · Confidential Proposal</div>
       </div>
 

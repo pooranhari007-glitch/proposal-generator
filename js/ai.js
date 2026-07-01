@@ -58,7 +58,6 @@ function normalizeProposal(data, profile, includeTimeline = false) {
     timeline: includeTimeline && Array.isArray(data.timeline) ? data.timeline.slice(0, 6) : [],
     includeTimeline,
     closingNote: data.closingNote || '',
-    demoPlan: data.demoPlan || null,
     profile
   };
 }

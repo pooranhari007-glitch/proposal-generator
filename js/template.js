@@ -34,7 +34,6 @@ function generateFromTemplate(parsed, profile) {
     timeline: timelineRows,
     includeTimeline: parsed.includeTimeline,
     closingNote: buildClosing(projectType, timeline),
-    demoPlan: buildDemoPlan(projectType, stack, title, reqs),
     profile
   };
 }
@@ -195,57 +194,7 @@ function buildDeliverables(projectType, stack, parsed) {
 
 function buildClosing(projectType, timeline) {
   const tl = timeline ? ` I can align to your ${timeline} timeline.` : '';
-  return `Ready to begin with a brief scope call and a relevant portfolio demo within the first week.${tl} Message me on Upwork to proceed.`;
-}
-
-function buildDemoPlan(projectType, stack, title, reqs) {
-  const primary = stack[0] || 'your stack';
-  const focus = reqs[0] ? truncate(reqs[0], 50) : `core ${projectType} flow`;
-
-  const itemsByType = {
-    'mobile application': [
-      `Interactive prototype of ${focus}`,
-      'One live API connection with real data',
-      'Installable test build on your device'
-    ],
-    'backend system': [
-      `Working API covering ${focus}`,
-      'Postman collection and environment setup',
-      'Deployed staging endpoint you can test immediately'
-    ],
-    'automation solution': [
-      `Script processing sample data for ${focus}`,
-      'Logged output with error handling demonstrated',
-      'Scheduled or triggered run on a real scenario'
-    ],
-    'AI-powered application': [
-      `Working prompt pipeline for ${focus}`,
-      'Sample inputs/outputs with cost estimate',
-      'Documented fallback when the model fails'
-    ],
-    'e-commerce platform': [
-      'Product browse and checkout on staging',
-      'One payment or inquiry flow end-to-end',
-      'Mobile-responsive page you can share with stakeholders'
-    ],
-    'SaaS product': [
-      'Auth + one core feature working on staging',
-      `Data model for ${focus} implemented`,
-      'Admin view of key metrics or records'
-    ]
-  };
-
-  const items = itemsByType[projectType] || [
-    `Live UI demonstrating ${focus}`,
-    `${primary} backend with correct data structure`,
-    'Deployed preview link within the first milestone'
-  ];
-
-  return {
-    title: `Proof of approach: ${truncate(title, 40)}`,
-    description: `Within the first milestone, I deliver a working slice — not mockups — so you can evaluate architecture, code quality, and fit before committing to the full build.`,
-    items
-  };
+  return `Ready to begin with a brief scope call within the first week.${tl} Message me on Upwork to proceed.`;
 }
 
 function truncate(s, n) {

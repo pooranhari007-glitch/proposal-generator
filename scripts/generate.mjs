@@ -48,10 +48,7 @@ function parseArgs(argv) {
 }
 
 function buildCoverNote(proposal) {
-  const demo = proposal.demoPlan?.title
-    ? ` I can share a quick ${proposal.demoPlan.title.toLowerCase()} in the first milestone.`
-    : '';
-  return `Hi — I put together a short proposal PDF for your project: requirements mapped, technical approach, timeline, and deliverables.${demo} Happy to jump on a quick call or start with a small demo. — Rajat`;
+  return `Hi — I put together a short proposal PDF for your project: requirements mapped, technical approach, timeline, and deliverables. Happy to jump on a quick call. — Rajat`;
 }
 
 async function main() {

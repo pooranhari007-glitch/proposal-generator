@@ -44,19 +44,13 @@ Return this exact JSON structure:
   "timeline": [
     { "phase": "name", "duration": "e.g. Week 1-2", "output": "deliverable" }
   ],
-  "closingNote": "1 professional sentence, personalized to the job",
-  "demoPlan": {
-    "title": "specific demo name tied to their project",
-    "description": "what working proof you deliver in milestone 1",
-    "items": ["3 specific demo deliverables"]
-  }
+  "closingNote": "1 professional sentence, personalized to the job"
 }
 
 Rules:
 - Extract at least 5 requirements directly from the job post
 - Every response must reference their actual needs, not generic templates
-- solution.summary must describe a real technical approach
-- demoPlan must be specific to their project type`
+- solution.summary must describe a real technical approach`
 };
 
 const TECH_KEYWORDS = {
